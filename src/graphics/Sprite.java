@@ -68,8 +68,8 @@ public class Sprite {
 
     public static Sprite player_up = new Sprite("src\\images\\player_up.png", 12 * SCALE, 16 * SCALE);
     public static Sprite player_down = new Sprite("src\\images\\player_down.png", 12 * SCALE, 16 * SCALE);
-    public static Sprite player_left = new Sprite("src\\images\\player_left.png", 10 * SCALE, 16 * SCALE);
-    public static Sprite player_right = new Sprite("src\\images\\player_right.png", 10 * SCALE, 16 * SCALE);
+    public static Sprite player_left = new Sprite("src\\images\\player_left.png", 12 * SCALE, 16 * SCALE);
+    public static Sprite player_right = new Sprite("src\\images\\player_right.png", 12 * SCALE, 16 * SCALE);
 
     public static Sprite player_up_1 = new Sprite("src\\images\\player_up_1.png", 12 * SCALE, 16 * SCALE);
     public static Sprite player_up_2 = new Sprite("src\\images\\player_up_2.png", 12 * SCALE, 16 * SCALE);
@@ -77,10 +77,10 @@ public class Sprite {
     public static Sprite player_down_1 = new Sprite("src\\images\\player_down_1.png", 12 * SCALE, 16 * SCALE);
     public static Sprite player_down_2 = new Sprite("src\\images\\player_down_2.png", 12 * SCALE, 16 * SCALE);
 
-    public static Sprite player_left_1 = new Sprite("src\\images\\player_left_1.png", 11 * SCALE, 16 * SCALE);
+    public static Sprite player_left_1 = new Sprite("src\\images\\player_left_1.png", 12 * SCALE, 16 * SCALE);
     public static Sprite player_left_2 = new Sprite("src\\images\\player_left_2.png", 12 * SCALE, 16 * SCALE);
 
-    public static Sprite player_right_1 = new Sprite("src\\images\\player_right_1.png", 11 * SCALE, 16 * SCALE);
+    public static Sprite player_right_1 = new Sprite("src\\images\\player_right_1.png", 12 * SCALE, 16 * SCALE);
     public static Sprite player_right_2 = new Sprite("src\\images\\player_right_2.png", 12 * SCALE, 16 * SCALE);
 
     public static Sprite player_dead1 = new Sprite("src\\images\\player_dead1.png", 14 * SCALE, 16 * SCALE);

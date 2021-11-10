@@ -15,6 +15,8 @@ public class MovingEntity extends Entity {
     private int downIndex = 9;
     private int speed;
     private int times = 0;
+    private int spriteLoop = 5;
+    public boolean left, right, up, down;
 
     public Point getCenter() {
         return new Point(x + mainSprite.getWidth() / 2, y + mainSprite.getHeight() / 2);
@@ -28,15 +30,18 @@ public class MovingEntity extends Entity {
         speed = x;
     }
 
+    public void setSpriteLoop(int x) {
+        spriteLoop = x;
+    }
+
     public MovingEntity(int x, int y, Sprite[] sprites) {
         super(x, y, sprites[0]);
         for (int i = 0; i < 12; i++) movingSprites[i] = sprites[i];
     }
 
-
     public void moveRight(BombermanGame game) {
         times++;
-        if (times == 3) {
+        if (times == spriteLoop) {
             rightIndex++;
             times = 0;
         }
@@ -57,7 +62,7 @@ public class MovingEntity extends Entity {
 
     public void moveLeft(BombermanGame game) {
         times++;
-        if (times == 3) {
+        if (times == spriteLoop) {
             leftIndex++;
             times = 0;
         }
@@ -78,7 +83,7 @@ public class MovingEntity extends Entity {
 
     public void moveUp(BombermanGame game) {
         times++;
-        if (times == 3) {
+        if (times == spriteLoop) {
             upIndex++;
             times = 0;
         }
@@ -99,7 +104,7 @@ public class MovingEntity extends Entity {
 
     public void moveDown(BombermanGame game) {
         times++;
-        if (times == 3) {
+        if (times == spriteLoop) {
             downIndex++;
             times = 0;
         }
@@ -117,10 +122,5 @@ public class MovingEntity extends Entity {
         }
         this.setY(Math.min(maxY - getHeight(),y + speed));
     }
-
-    public void update(Graphics g) {
-
-    }
-
 
 }

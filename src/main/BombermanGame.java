@@ -22,7 +22,6 @@ public class BombermanGame extends JPanel {
     BufferedImage scene = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     public String mapPath;
     char[][] currentMap = new char[13][31];
-
     public BombermanGame(String mapPath) {
         this.mapPath = mapPath;
     }
@@ -68,6 +67,7 @@ public class BombermanGame extends JPanel {
             }
         }
 
+        bomber.move(this);
         bomber.draw(g);
     }
 
@@ -75,49 +75,38 @@ public class BombermanGame extends JPanel {
         this.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    bomber.moveRight(game);
-                }
-                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    bomber.moveLeft(game);
-                }
-                if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    bomber.moveUp(game);
-                }
-                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    bomber.moveDown(game);
-                }
+
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    bomber.moveRight(game);
+                    bomber.right = true;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    bomber.moveLeft(game);
+                    bomber.left = true;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    bomber.moveUp(game);
+                    bomber.up = true;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    bomber.moveDown(game);
+                    bomber.down = true;
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    bomber.moveRight(game);
+                    bomber.right = false;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    bomber.moveLeft(game);
+                    bomber.left = false;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    bomber.moveUp(game);
+                    bomber.up = false;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    bomber.moveDown(game);
+                    bomber.down = false;
                 }
             }
         });

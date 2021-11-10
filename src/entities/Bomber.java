@@ -7,7 +7,7 @@ import main.Map;
 import java.awt.*;
 
 public class Bomber extends MovingEntity {
-    public static final int SPEED = 2;
+    public static final int SPEED = 1;
     public static Sprite[] bomberSprites = {
             Sprite.player_right,
             Sprite.player_right_1,
@@ -31,9 +31,9 @@ public class Bomber extends MovingEntity {
     @Override
     public void moveRight(BombermanGame game) {
         Point center = getCenter();
-        Point centerPos = Map.getPosition(x + getWidth() + 1, center.y);
-        Point topPos = Map.getPosition(x + getWidth() + 1, y);
-        Point bottomPos = Map.getPosition(x + getWidth() + 1, y + getHeight() - 1);
+        Point centerPos = Map.getPosition(x + getWidth() , center.y);
+        Point topPos = Map.getPosition(x + getWidth() , y);
+        Point bottomPos = Map.getPosition(x + getWidth() , y + getHeight() - 1);
         if (!(game.staticEntities[centerPos.x][centerPos.y] instanceof Grass)) {
             super.moveRight(game);
             return;
@@ -160,6 +160,83 @@ public class Bomber extends MovingEntity {
                 setSpeed(SPEED);
             }
         }
+    }
+
+    public void moveRightUp(BombermanGame game) {
+        Point rightTop = new Point(x + getWidth() - 1, y);
+        Point topPos = Map.getPosition(rightTop.x,rightTop.y - 1);
+        if (game.staticEntities[topPos.x][topPos.y] instanceof Grass) {
+            moveUp(game);
+        }
+        rightTop = new Point(x + getWidth() - 1, y);
+        Point rightPos = Map.getPosition(rightTop.x + 1, rightTop.y);
+        if (game.staticEntities[rightPos.x][rightPos.y] instanceof Grass) {
+            moveRight(game);
+        }
+    }
+
+    public void moveRightDown(BombermanGame game) {
+        Point rightBottom = new Point(x + getWidth() - 1, y + getHeight() - 1);
+        Point bottomPos = Map.getPosition(rightBottom.x,rightBottom.y + 1);
+        if (game.staticEntities[bottomPos.x][bottomPos.y] instanceof Grass) {
+            moveDown(game);
+        }
+        rightBottom = new Point(x + getWidth() - 1, y + getHeight() - 1);
+        Point rightPos = Map.getPosition(rightBottom.x + 1, rightBottom.y);
+        if (game.staticEntities[rightPos.x][rightPos.y] instanceof Grass) {
+            moveRight(game);
+        }
+    }
+
+    public void moveLeftUp(BombermanGame game) {
+        Point leftTop = new Point(x, y);
+        Point topPos = Map.getPosition(leftTop.x,leftTop.y - 1);
+        if (game.staticEntities[topPos.x][topPos.y] instanceof Grass) {
+            moveUp(game);
+        }
+        leftTop = new Point(x, y);
+        Point leftPos = Map.getPosition(leftTop.x - 1, leftTop.y);
+        if (game.staticEntities[leftPos.x][leftPos.y] instanceof Grass) {
+            moveLeft(game);
+        }
+    }
+
+    public void moveLeftDown(BombermanGame game) {
+        Point leftBottom = new Point(x, y + getHeight() - 1);
+        Point bottomPos = Map.getPosition(leftBottom.x,leftBottom.y + 1);
+        if (game.staticEntities[bottomPos.x][bottomPos.y] instanceof Grass) {
+            moveDown(game);
+        }
+        leftBottom = new Point(x, y + getHeight() - 1);
+        Point leftPos = Map.getPosition(leftBottom.x - 1, leftBottom.y);
+        if (game.staticEntities[leftPos.x][leftPos.y] instanceof Grass) {
+            moveLeft(game);
+        }
+    }
+
+    public void move(BombermanGame game) {
+        int sum = 0;
+        if (left) sum++; if (right) sum++; if (up) sum++; if (down) sum++;
+        if (sum == 2 && up && right) {
+            moveRightUp(game);
+            return;
+        }
+        if (sum == 2 && down && right) {
+            moveRightDown(game);
+            return;
+        }
+        if (sum == 2 && up && left) {
+            moveLeftUp(game);
+            return;
+        }
+        if (sum == 2 && down && left) {
+            moveLeftDown(game);
+            return;
+        }
+        if (left) moveLeft(game);
+        if (right) moveRight(game);
+        if (up) moveUp(game);
+        if (down) moveDown(game);
     }
 
 }
