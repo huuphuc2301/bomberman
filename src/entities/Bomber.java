@@ -23,9 +23,15 @@ public class Bomber extends MovingEntity {
             Sprite.player_down_2
         };
 
+
     public Bomber(int x, int y) {
         super(x, y, bomberSprites);
         this.setSpeed(SPEED);
+    }
+
+    public boolean isFree(Point point, BombermanGame game) {
+        Point pos = Map.getPosition(point.x, point.y);
+        return (game.staticEntities[pos.x][pos.y] instanceof Grass);
     }
 
     @Override
@@ -163,55 +169,129 @@ public class Bomber extends MovingEntity {
     }
 
     public void moveRightUp(BombermanGame game) {
-        Point rightTop = new Point(x + getWidth() - 1, y);
-        Point topPos = Map.getPosition(rightTop.x,rightTop.y - 1);
-        if (game.staticEntities[topPos.x][topPos.y] instanceof Grass) {
-            moveUp(game);
+        Point rightBottom = new Point(x + getWidth(), y + getHeight() - 1);
+        Point rightCenter = new Point( x + getWidth(), getCenter().y);
+        if (!isFree(rightBottom, game) && isFree(rightCenter, game)) {
+            moveRight(game);
+            return;
         }
-        rightTop = new Point(x + getWidth() - 1, y);
+
+        Point topLeft = new Point(x, y - 1);
+        Point topCenter = new Point( getCenter().x, y - 1);
+        if (!isFree(topLeft, game) && isFree(topCenter, game)) {
+            moveUp(game);
+            return;
+        }
+        boolean isMove = false;
+        Point rightTop = new Point(x + getWidth() - 1, y);
         Point rightPos = Map.getPosition(rightTop.x + 1, rightTop.y);
         if (game.staticEntities[rightPos.x][rightPos.y] instanceof Grass) {
             moveRight(game);
+            isMove = true;
         }
+        rightTop = new Point(x + getWidth() - 1, y);
+        Point topPos = Map.getPosition(rightTop.x,rightTop.y - 1);
+        if (game.staticEntities[topPos.x][topPos.y] instanceof Grass) {
+            moveUp(game);
+            isMove = true;
+        }
+        if (!isMove) moveRight(game);
     }
 
     public void moveRightDown(BombermanGame game) {
-        Point rightBottom = new Point(x + getWidth() - 1, y + getHeight() - 1);
-        Point bottomPos = Map.getPosition(rightBottom.x,rightBottom.y + 1);
-        if (game.staticEntities[bottomPos.x][bottomPos.y] instanceof Grass) {
-            moveDown(game);
+        Point rightTop = new Point(x + getWidth(), y);
+        Point rightCenter = new Point( x + getWidth(), getCenter().y);
+        if (!isFree(rightTop, game) && isFree(rightCenter, game)) {
+            moveRight(game);
+            return;
         }
-        rightBottom = new Point(x + getWidth() - 1, y + getHeight() - 1);
+
+        Point bottomLeft = new Point(x, y + getHeight());
+        Point bottomCenter = new Point( getCenter().x, y + getHeight());
+        if (!isFree(bottomLeft, game) && isFree(bottomCenter, game)) {
+            moveDown(game);
+            return;
+        }
+
+        boolean isMove = false;
+        Point rightBottom = new Point(x + getWidth() - 1, y + getHeight() - 1);
         Point rightPos = Map.getPosition(rightBottom.x + 1, rightBottom.y);
         if (game.staticEntities[rightPos.x][rightPos.y] instanceof Grass) {
             moveRight(game);
+            isMove = true;
         }
+
+        rightBottom = new Point(x + getWidth() - 1, y + getHeight() - 1);
+        Point bottomPos = Map.getPosition(rightBottom.x,rightBottom.y + 1);
+        if (game.staticEntities[bottomPos.x][bottomPos.y] instanceof Grass) {
+            moveDown(game);
+            isMove = true;
+        }
+        if (!isMove) moveLeft(game);
     }
 
     public void moveLeftUp(BombermanGame game) {
+        Point leftBottom = new Point(x - 1, y + getHeight() - 1);
+        Point leftCenter = new Point( x - 1, getCenter().y);
+        if (!isFree(leftBottom, game) && isFree(leftCenter, game)) {
+            moveLeft(game);
+            return;
+        }
+
+        Point topRight = new Point(x + getWidth() - 1, y - 1);
+        Point topCenter = new Point( getCenter().x, y - 1);
+        if (!isFree(topRight, game) && isFree(topCenter, game)) {
+            moveUp(game);
+            return;
+        }
+
         Point leftTop = new Point(x, y);
+        Point leftPos = Map.getPosition(leftTop.x - 1, leftTop.y);
+
+        boolean isMove = false;
+        if (game.staticEntities[leftPos.x][leftPos.y] instanceof Grass) {
+            moveLeft(game);
+            isMove = true;
+        }
+
+        leftTop = new Point(x, y);
         Point topPos = Map.getPosition(leftTop.x,leftTop.y - 1);
         if (game.staticEntities[topPos.x][topPos.y] instanceof Grass) {
             moveUp(game);
+            isMove = true;
         }
-        leftTop = new Point(x, y);
-        Point leftPos = Map.getPosition(leftTop.x - 1, leftTop.y);
-        if (game.staticEntities[leftPos.x][leftPos.y] instanceof Grass) {
-            moveLeft(game);
-        }
+        if (!isMove) moveLeft(game);
     }
 
     public void moveLeftDown(BombermanGame game) {
-        Point leftBottom = new Point(x, y + getHeight() - 1);
-        Point bottomPos = Map.getPosition(leftBottom.x,leftBottom.y + 1);
-        if (game.staticEntities[bottomPos.x][bottomPos.y] instanceof Grass) {
-            moveDown(game);
+        Point leftTop = new Point(x - 1, y);
+        Point leftCenter = new Point( x - 1, getCenter().y);
+        if (!isFree(leftTop, game) && isFree(leftCenter, game)) {
+            moveLeft(game);
+            return;
         }
-        leftBottom = new Point(x, y + getHeight() - 1);
+
+        Point bottomRight = new Point(x + getWidth() - 1, y + getHeight());
+        Point bottomCenter = new Point( getCenter().x, y + getHeight());
+        if (!isFree(bottomRight, game) && isFree(bottomCenter, game)) {
+            moveDown(game);
+            return;
+        }
+
+        boolean isMove = false;
+        Point leftBottom = new Point(x, y + getHeight() - 1);
         Point leftPos = Map.getPosition(leftBottom.x - 1, leftBottom.y);
         if (game.staticEntities[leftPos.x][leftPos.y] instanceof Grass) {
             moveLeft(game);
+            isMove = true;
         }
+        leftBottom = new Point(x, y + getHeight() - 1);
+        Point bottomPos = Map.getPosition(leftBottom.x,leftBottom.y + 1);
+        if (game.staticEntities[bottomPos.x][bottomPos.y] instanceof Grass) {
+            moveDown(game);
+            isMove = true;
+        }
+        if (!isMove) moveLeft(game);
     }
 
     public void move(BombermanGame game) {
