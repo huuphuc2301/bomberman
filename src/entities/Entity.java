@@ -2,13 +2,12 @@ package entities;
 
 import graphics.Sprite;
 
-import javax.swing.*;
 import java.awt.*;
 
 public abstract class Entity {
     protected int x;
     protected int y;
-    protected Sprite sprite;
+    protected Sprite mainSprite;
 
     public int getX() {
         return x;
@@ -26,19 +25,18 @@ public abstract class Entity {
         this.y = y;
     }
 
-    public Sprite getSprite() {
-        return sprite;
+    public Sprite getMainSprite() {
+        return mainSprite;
     }
 
-    public void setSprite(Sprite sprite) {
-        this.sprite = sprite;
+    public void setMainSprite(Sprite mainSprite) {
+        this.mainSprite = mainSprite;
     }
 
     public Entity(int x, int y, Sprite sprite) {
         this.x = x;
         this.y = y;
-        this.sprite = sprite;
-
+        this.mainSprite = sprite;
     }
 
     public void setPosition(int x, int y) {
@@ -47,7 +45,7 @@ public abstract class Entity {
     }
 
     public void draw(Graphics g) {
-        g.drawImage(sprite.getImage(), x, y, sprite.getWidth(), sprite.getHeight(), null);
+        g.drawImage(mainSprite.getImage(), x, y, Sprite.SIZE, Sprite.SIZE, null);
     }
 
 }
