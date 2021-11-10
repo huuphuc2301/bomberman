@@ -29,6 +29,14 @@ public abstract class Entity {
         return mainSprite;
     }
 
+    public int getWidth() {
+        return mainSprite.getWidth();
+    }
+
+    public int getHeight() {
+        return mainSprite.getHeight();
+    }
+
     public void setMainSprite(Sprite mainSprite) {
         this.mainSprite = mainSprite;
     }

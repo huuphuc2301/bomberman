@@ -1,6 +1,7 @@
 package entities;
 
 import graphics.Sprite;
+import main.BombermanGame;
 
 import java.awt.*;
 
@@ -20,10 +21,10 @@ public class Bomber extends MovingEntity {
             Sprite.player_down_1,
             Sprite.player_down_2
         };
+
     public Bomber(int x, int y) {
         super(x, y, bomberSprites);
         this.setSpeed(SPEED);
     }
-
 
 }
