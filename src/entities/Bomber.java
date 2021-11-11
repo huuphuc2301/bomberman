@@ -53,16 +53,12 @@ public class Bomber extends MovingEntity {
         if (!(game.staticEntities[topPos.x][centerPos.y] instanceof Grass)) {
             if (y + getSpeed() <= targetY) super.moveDown(game);
             else {
-                setSpeed(targetY - y);
-                super.moveDown(game);
-                setSpeed(SPEED);
+                setY(targetY);
             }
         } else {
             if (y - getSpeed() >= targetY) super.moveUp(game);
             else {
-                setSpeed(y - targetY);
-                super.moveUp(game);
-                setSpeed(SPEED);
+                setY(targetY);
             }
         }
     }
@@ -86,16 +82,12 @@ public class Bomber extends MovingEntity {
         if (!(game.staticEntities[topPos.x][centerPos.y] instanceof Grass)) {
             if (y + getSpeed() <= targetY) super.moveDown(game);
             else {
-                setSpeed(targetY - y);
-                super.moveDown(game);
-                setSpeed(SPEED);
+                setY(targetY);
             }
         } else {
             if (y - getSpeed() >= targetY) super.moveUp(game);
             else {
-                setSpeed(y - targetY);
-                super.moveUp(game);
-                setSpeed(SPEED);
+                setY(targetY);
             }
         }
     }
@@ -119,17 +111,13 @@ public class Bomber extends MovingEntity {
             int targetX = centerPos.y * Sprite.SIZE;
             if (x + getSpeed() <= targetX) super.moveRight(game);
             else {
-                setSpeed(targetX - x);
-                super.moveRight(game);
-                setSpeed(SPEED);
+                setX(targetX);
             }
         } else {
             int targetX = (centerPos.y + 1) * Sprite.SIZE - bomberSprites[6].getWidth();
             if (x - getSpeed() >= targetX) super.moveLeft(game);
             else {
-                setSpeed(x - targetX);
-                super.moveLeft(game);
-                setSpeed(SPEED);
+                setX(targetX);
             }
         }
     }
@@ -153,17 +141,13 @@ public class Bomber extends MovingEntity {
             int targetX = centerPos.y * Sprite.SIZE;
             if (x + getSpeed() <= targetX) super.moveRight(game);
             else {
-                setSpeed(targetX - x);
-                super.moveRight(game);
-                setSpeed(SPEED);
+                setX(targetX);
             }
         } else {
             int targetX = (centerPos.y + 1) * Sprite.SIZE - bomberSprites[9].getWidth();
             if (x - getSpeed() >= targetX) super.moveLeft(game);
             else {
-                setSpeed(x - targetX);
-                super.moveLeft(game);
-                setSpeed(SPEED);
+                setX(targetX);
             }
         }
     }

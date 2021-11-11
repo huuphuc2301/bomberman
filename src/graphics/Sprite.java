@@ -46,7 +46,7 @@ public class Sprite {
             image.getScaledInstance(SIZE, SIZE, image.SCALE_SMOOTH);
 
         } catch (IOException e) {
-            System.out.println("Error read image");
+            System.out.println("Error read image " + path);
         }
     }
 
@@ -93,15 +93,15 @@ public class Sprite {
    |--------------------------------------------------------------------------
     */
     //BALLOM
-    public static Sprite balloom_left1 = new Sprite("images\\ballom_left1.png", 16 * SCALE, 16 * SCALE);
-    public static Sprite balloom_left2 = new Sprite("images\\ballom_left2.png", 16 * SCALE, 16 * SCALE);
-    public static Sprite balloom_left3 = new Sprite("images\\ballom_left3.png", 16 * SCALE, 16 * SCALE);
+    public static Sprite balloom_left1 = new Sprite("images\\balloom_left1.png", 16 * SCALE, 16 * SCALE);
+    public static Sprite balloom_left2 = new Sprite("images\\balloom_left2.png", 16 * SCALE, 16 * SCALE);
+    public static Sprite balloom_left3 = new Sprite("images\\balloom_left3.png", 16 * SCALE, 16 * SCALE);
 
-    public static Sprite balloom_right1 = new Sprite("images\\ballom_right1.png", 16 * SCALE, 16 * SCALE);
-    public static Sprite balloom_right2 = new Sprite("images\\ballom_right2.png", 16 * SCALE, 16 * SCALE);
-    public static Sprite balloom_right3 = new Sprite("images\\ballom_right3.png", 16 * SCALE, 16 * SCALE);
+    public static Sprite balloom_right1 = new Sprite("images\\balloom_right1.png", 16 * SCALE, 16 * SCALE);
+    public static Sprite balloom_right2 = new Sprite("images\\balloom_right2.png", 16 * SCALE, 16 * SCALE);
+    public static Sprite balloom_right3 = new Sprite("images\\balloom_right3.png", 16 * SCALE, 16 * SCALE);
 
-    public static Sprite balloom_dead = new Sprite("images\\ballom_dead.png", 16 * SCALE, 16 * SCALE);
+    public static Sprite balloom_dead = new Sprite("images\\balloom_dead.png", 16 * SCALE, 16 * SCALE);
 
     //ONEAL
     public static Sprite oneal_left1 = new Sprite("images\\oneal_left1.png", 16 * SCALE, 16 * SCALE);
@@ -118,9 +118,9 @@ public class Sprite {
 	| Bomb Sprites
 	|--------------------------------------------------------------------------
 	 */
-    public static Sprite bomb = new Sprite("images\\bomb.png", 15 * SCALE, 15 * SCALE);;
-    public static Sprite bomb_1 = new Sprite("images\\bomb_1.png", 13 * SCALE, 15 * SCALE);;
-    public static Sprite bomb_2 = new Sprite("images\\bomb_2.png", 12 * SCALE, 14 * SCALE);;
+    public static Sprite bomb = new Sprite("images\\bomb.png", 16 * SCALE, 16 * SCALE);;
+    public static Sprite bomb_1 = new Sprite("images\\bomb_1.png", 16 * SCALE, 16 * SCALE);;
+    public static Sprite bomb_2 = new Sprite("images\\bomb_2.png", 16 * SCALE, 16 * SCALE);;
 
 
     /*
