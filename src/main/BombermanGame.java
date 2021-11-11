@@ -135,7 +135,7 @@ public class BombermanGame extends JPanel {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
 
-        BombermanGame myGame = new BombermanGame("src\\map-config\\map1.txt");
+        BombermanGame myGame = new BombermanGame("map-config\\map1.txt");
         myGame.setFocusable(true);
         myGame.requestFocusInWindow();
         myGame.addListener(myGame);

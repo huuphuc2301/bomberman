@@ -7,7 +7,7 @@ import main.Map;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class MovingEntity extends Entity {
+public abstract class MovingEntity extends Entity {
     private Sprite[] movingSprites = new Sprite[12];
     private int rightIndex = 0;
     private int leftIndex = 3;
