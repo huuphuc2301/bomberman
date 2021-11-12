@@ -141,7 +141,7 @@ public class BombermanGame extends JPanel {
             drawGame();
             this.getGraphics().drawImage(scene, 0, 0, null);
             try {
-                Thread.sleep(10);
+                Thread.sleep(12);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
