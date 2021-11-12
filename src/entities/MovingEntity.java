@@ -19,9 +19,6 @@ public abstract class MovingEntity extends Entity {
     private int spriteLoop = 5;
     public boolean left, right, up, down;
 
-    public Point getCenter() {
-        return new Point(x + mainSprite.getWidth() / 2, y + mainSprite.getHeight() / 2);
-    }
 
     public int getSpeed() {
         return speed;
@@ -53,10 +50,17 @@ public abstract class MovingEntity extends Entity {
         Point center = getCenter();
         Point pos = Map.getPosition(center.x, center.y);
         int maxX = 30 * Sprite.SIZE;
-        for (int j = pos.y; j < 31; j++) {
+        if (pos.y + 1 < 31) {
+            int j = pos.y + 1;
+            if (game.staticEntities[pos.x][j] instanceof Bomb && this instanceof Enemy) {
+                maxX = j * Sprite.SIZE;
+                if (x + speed > maxX - getWidth()) {
+                    ((Enemy) this).setTarget(game);
+                    System.out.println(((Enemy) this).targetX);
+                }
+            }
             if (!(game.staticEntities[pos.x][j] instanceof Grass)) {
                 maxX = j * Sprite.SIZE;
-                break;
             }
         }
         setX(Math.min(maxX - getWidth(), x + speed));
@@ -73,11 +77,17 @@ public abstract class MovingEntity extends Entity {
 
         Point center = getCenter();
         Point pos = Map.getPosition(center.x, center.y);
-        int minX = 1 * Sprite.SIZE;
-        for (int j = pos.y; j > 0; j--) {
+        int minX = Sprite.SIZE;
+        if (pos.y - 1 >= 0) {
+            int j = pos.y - 1;
+            if (game.staticEntities[pos.x][j] instanceof Bomb && this instanceof Enemy) {
+                minX = (j + 1) * Sprite.SIZE;
+                if (x - speed < minX) {
+                    ((Enemy) this).setTarget(game);
+                }
+            }
             if (!(game.staticEntities[pos.x][j] instanceof Grass)) {
                 minX = (j + 1) * Sprite.SIZE;
-                break;
             }
         }
         setX(Math.max(minX, x - speed));
@@ -94,11 +104,17 @@ public abstract class MovingEntity extends Entity {
 
         Point center = getCenter();
         Point pos = Map.getPosition(center.x, center.y);
-        int minY = 1 * Sprite.SIZE;
-        for (int i = pos.x; i > 0; i--) {
+        int minY = Sprite.SIZE;
+        if (pos.x - 1 >= 0) {
+            int i = pos.x - 1;
+            if (game.staticEntities[i][pos.y] instanceof Bomb && this instanceof Enemy) {
+                minY = (i + 1) * Sprite.SIZE;
+                if (y - speed < minY) {
+                    ((Enemy) this).setTarget(game);
+                }
+            }
             if (!(game.staticEntities[i][pos.y] instanceof Grass)) {
                 minY = (i + 1) * Sprite.SIZE;
-                break;
             }
         }
         this.setY(Math.max(minY, y - speed));
@@ -116,10 +132,16 @@ public abstract class MovingEntity extends Entity {
         Point center = getCenter();
         Point pos = Map.getPosition(center.x, center.y);
         int maxY = 13 * Sprite.SIZE;
-        for (int i = pos.x; i < 13; i++) {
+        if (pos.x + 1 < 13) {
+            int i = pos.x + 1;
+            if (game.staticEntities[i][pos.y] instanceof Bomb && this instanceof Enemy) {
+                maxY = i * Sprite.SIZE;
+                if (y + speed > maxY - getHeight()) {
+                    ((Enemy) this).setTarget(game);
+                }
+            }
             if (!(game.staticEntities[i][pos.y] instanceof Grass)) {
                 maxY = i * Sprite.SIZE;
-                break;
             }
         }
         this.setY(Math.min(maxY - getHeight(), y + speed));

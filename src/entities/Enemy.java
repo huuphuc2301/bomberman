@@ -17,6 +17,9 @@ public abstract class Enemy extends MovingEntity{
 
     public abstract void setTarget(BombermanGame game);
     public void move(BombermanGame game) {
+        if (targetX < 0) {
+            setTarget(game);
+        }
         if (isTouch(targetX,targetY)) {
             setX(targetX);
             setY(targetY);

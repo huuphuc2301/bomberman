@@ -32,33 +32,42 @@ public class Balloom extends Enemy {
 
     @Override
     public void setTarget(BombermanGame game) {
-        int posX = x/Sprite.SIZE;
-        int posY = y/Sprite.SIZE;
+        int col = x/Sprite.SIZE;
+        int row = y/Sprite.SIZE;
         ArrayList<Point> targets = new ArrayList<Point>();
-        while (++posX <= game.getWidth() / Sprite.SIZE) {
-            if (game.staticEntities[posY][posX] instanceof Grass) {
-                targets.add(new Point(posX, posY));
+        while (++col <= game.getWidth() / Sprite.SIZE) {
+            if (game.staticEntities[row][col] instanceof Bomb)
+                break;
+            if (game.staticEntities[row][col] instanceof Grass) {
+                targets.add(new Point(col, row));
             } else break;
         }
-        posX = x/Sprite.SIZE;
-        while (--posX >= 0) {
-            if (game.staticEntities[posY][posX]  instanceof Grass) {
-                targets.add(new Point(posX, posY));
+        col = x/Sprite.SIZE;
+        while (--col >= 0) {
+            if (game.staticEntities[row][col] instanceof Bomb)
+                break;
+            if (game.staticEntities[row][col]  instanceof Grass) {
+                targets.add(new Point(col, row));
             } else break;
         }
-        posX = x/Sprite.SIZE;
-        while (++posY < game.getHeight() / Sprite.SIZE) {
-            if (game.staticEntities[posY][posX]  instanceof Grass) {
-                targets.add(new Point(posX, posY));
+        col = x/Sprite.SIZE;
+        while (++row < game.getHeight() / Sprite.SIZE) {
+            if (game.staticEntities[row][col] instanceof Bomb)
+                break;
+            if (game.staticEntities[row][col]  instanceof Grass) {
+                targets.add(new Point(col, row));
             } else break;
         }
-        posY = y/Sprite.SIZE;
-        while (--posY >= 0) {
-            if (game.staticEntities[posY][posX]  instanceof Grass) {
-                targets.add(new Point(posX, posY));
+        row = y/Sprite.SIZE;
+        while (--row >= 0) {
+            if (game.staticEntities[row][col] instanceof Bomb)
+                break;
+            if (game.staticEntities[row][col]  instanceof Grass) {
+                targets.add(new Point(col, row));
             } else break;
         }
-        posY = y/Sprite.SIZE;
+        row = y/Sprite.SIZE;
+        if (targets.size()==0) targets.add(new Point(-1,-1));
         Collections.shuffle(targets);
         targetX = targets.get(0).x * Sprite.SIZE;
         targetY = targets.get(0).y * Sprite.SIZE;

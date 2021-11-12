@@ -87,6 +87,14 @@ public class BombermanGame extends JPanel {
                 if (staticEntities[i][j] instanceof Brick && ((Brick) staticEntities[i][j]).isExploding) {
                     new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass).draw(g);
                 }
+
+                if (staticEntities[i][j] instanceof Bomb) {
+                    Grass grass=new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
+                    if (!bombs.contains((Bomb) staticEntities[i][j])) {
+                        staticEntities[i][j]=grass;
+                    }
+                    else grass.draw(g);
+                }
                 staticEntities[i][j].draw(g);
             }
         }
@@ -135,7 +143,9 @@ public class BombermanGame extends JPanel {
                     for (Bomb bomb : bombs) {
                         if (pos.equals(Map.getPosition(bomb.getX(), bomb.getY()))) return;
                     }
-                    bombs.add(new Bomb(pos.y * Sprite.SIZE, pos.x * Sprite.SIZE, bomber.getBombSize(), game));
+                    Bomb newBomb=new Bomb(pos.y * Sprite.SIZE, pos.x * Sprite.SIZE, bomber.getBombSize(), game);
+                    bombs.add(newBomb);
+                    staticEntities[pos.x][pos.y]=newBomb;
                 }
             }
 

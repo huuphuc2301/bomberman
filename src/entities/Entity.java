@@ -9,6 +9,12 @@ public abstract class Entity {
     protected int y;
     protected Sprite mainSprite;
 
+    public Entity(int x, int y, Sprite sprite) {
+        this.x = x;
+        this.y = y;
+        this.mainSprite = sprite;
+    }
+
     public int getX() {
         return x;
     }
@@ -41,10 +47,8 @@ public abstract class Entity {
         this.mainSprite = mainSprite;
     }
 
-    public Entity(int x, int y, Sprite sprite) {
-        this.x = x;
-        this.y = y;
-        this.mainSprite = sprite;
+    public Point getCenter() {
+        return new Point(x + mainSprite.getWidth() / 2, y + mainSprite.getHeight() / 2);
     }
 
     public void setPosition(int x, int y) {
