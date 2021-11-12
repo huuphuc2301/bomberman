@@ -25,7 +25,7 @@ public class Bomber extends MovingEntity {
 
 
     public Bomber(int x, int y) {
-        super(x, y, bomberSprites);
+        super(x, y, bomberSprites, bomberSprites);
         this.setSpeed(SPEED);
     }
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public abstract class MovingEntity extends Entity {
     private Sprite[] movingSprites = new Sprite[12];
+    private Sprite[] deadSprites = new Sprite[3];
     private int rightIndex = 0;
     private int leftIndex = 3;
     private int upIndex = 6;
@@ -34,9 +35,10 @@ public abstract class MovingEntity extends Entity {
         spriteLoop = x;
     }
 
-    public MovingEntity(int x, int y, Sprite[] sprites) {
-        super(x, y, sprites[0]);
-        for (int i = 0; i < 12; i++) movingSprites[i] = sprites[i];
+    public MovingEntity(int x, int y, Sprite[] movingSprites, Sprite[] deadSprites) {
+        super(x, y, movingSprites[0]);
+        for (int i = 0; i < 12; i++) this.movingSprites[i] = movingSprites[i];
+        for (int i = 0; i < 3; i++) this.deadSprites[i] = deadSprites[i];
     }
 
     public void moveRight(BombermanGame game) {
@@ -99,7 +101,7 @@ public abstract class MovingEntity extends Entity {
                 break;
             }
         }
-        this.setY(Math.max(minY,y - speed));
+        this.setY(Math.max(minY, y - speed));
     }
 
     public void moveDown(BombermanGame game) {
@@ -120,7 +122,11 @@ public abstract class MovingEntity extends Entity {
                 break;
             }
         }
-        this.setY(Math.min(maxY - getHeight(),y + speed));
+        this.setY(Math.min(maxY - getHeight(), y + speed));
+    }
+
+    public boolean isTouch(int targetX, int targetY) {
+        return (Math.abs(x - targetX) < speed && Math.abs(y - targetY) < speed);
     }
 
 }

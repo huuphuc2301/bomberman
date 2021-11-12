@@ -7,18 +7,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class BombermanGame extends JPanel {
     public static final int WIDTH = Sprite.SIZE * 31;
-    private static final int HEIGHT = Sprite.SIZE * 13 ;
+    public static final int HEIGHT = Sprite.SIZE * 13 ;
     public static final int FRAME_WIDTH = WIDTH + 13;
     public static final int FRAME_HEIGHT = HEIGHT + 120;
+    public static int numColumns=31;
+    public static int numRows=13;
     public Entity[][] staticEntities = new Entity[13][31];
     public Bomber bomber = new Bomber(Sprite.SIZE, Sprite.SIZE);
+    public ArrayList<Enemy> enemies=new ArrayList<Enemy>();
     BufferedImage scene = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     public String mapPath;
     char[][] currentMap = new char[13][31];
@@ -51,6 +52,18 @@ public class BombermanGame extends JPanel {
                         staticEntities[i][j] = new Brick(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.brick);
                         break;
                     }
+                    case Map.BALLOOM: {
+                        staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
+                        Balloom balloom=new Balloom(j * Sprite.SIZE, i * Sprite.SIZE);
+                        enemies.add(balloom);
+                        break;
+                    }
+                    case Map.ONEAL: {
+                        staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
+                        Oneal oneal=new Oneal(j * Sprite.SIZE, i * Sprite.SIZE);
+                        enemies.add(oneal);
+                        break;
+                    }
                     default:
                         staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
                 }
@@ -59,7 +72,7 @@ public class BombermanGame extends JPanel {
 
     }
 
-    public void draw() {
+    public void drawGame() {
         Graphics g = scene.getGraphics();
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 31; j++) {
@@ -69,6 +82,11 @@ public class BombermanGame extends JPanel {
 
         bomber.move(this);
         bomber.draw(g);
+
+        for (int i=0;i<enemies.size();i++) {
+            enemies.get(i).move(this);
+            enemies.get(i).draw(g);
+        }
     }
 
     public void addListener(BombermanGame game) {
@@ -111,13 +129,16 @@ public class BombermanGame extends JPanel {
             }
         });
     }
-
-
+    public void setTargetEnemies() {
+        for (int i=0;i<enemies.size();i++)
+            enemies.get(i).setTarget(this);
+    }
     public void start() {
         loadMap(mapPath);
-        draw();
+        setTargetEnemies();
+        drawGame();
         while (true) {
-            draw();
+            drawGame();
             this.getGraphics().drawImage(scene, 0, 0, null);
             try {
                 Thread.sleep(10);

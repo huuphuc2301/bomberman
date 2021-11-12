@@ -11,7 +11,7 @@ public class Map {
     public static final char BRICK = '*';
     public static final char GRASS = ' ';
     public static final char BOMBER = 'p';
-    public static final char BALLOON = '1';
+    public static final char BALLOOM = '1';
     public static final char ONEAL = '2';
     public static final char BOMB_ITEM = 'b';
     public static final char FLAME_ITEM = 'f';

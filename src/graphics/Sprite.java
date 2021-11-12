@@ -92,10 +92,13 @@ public class Sprite {
    | Enemies
    |--------------------------------------------------------------------------
     */
-    //ALL
+    //HEAD
+
+    //DEAD
     public static Sprite mob_dead1 = new Sprite("images\\mob_dead1.png", 16 * SCALE, 16 * SCALE);
     public static Sprite mob_dead2 = new Sprite("images\\mob_dead2.png", 16 * SCALE, 16 * SCALE);
     public static Sprite mob_dead3 = new Sprite("images\\mob_dead3.png", 16 * SCALE, 16 * SCALE);
+
 
     //BALLOM
     public static Sprite balloom_left1 = new Sprite("images\\balloom_left1.png", 16 * SCALE, 16 * SCALE);
@@ -123,9 +126,12 @@ public class Sprite {
 	| Bomb Sprites
 	|--------------------------------------------------------------------------
 	 */
-    public static Sprite bomb = new Sprite("images\\bomb.png", 16 * SCALE, 16 * SCALE);;
-    public static Sprite bomb_1 = new Sprite("images\\bomb_1.png", 16 * SCALE, 16 * SCALE);;
-    public static Sprite bomb_2 = new Sprite("images\\bomb_2.png", 16 * SCALE, 16 * SCALE);;
+    public static Sprite bomb = new Sprite("images\\bomb.png", 16 * SCALE, 16 * SCALE);
+    ;
+    public static Sprite bomb_1 = new Sprite("images\\bomb_1.png", 16 * SCALE, 16 * SCALE);
+    ;
+    public static Sprite bomb_2 = new Sprite("images\\bomb_2.png", 16 * SCALE, 16 * SCALE);
+    ;
 
 
     /*
