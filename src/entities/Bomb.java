@@ -53,14 +53,18 @@ public class Bomb extends Entity {
     public boolean isRunning = true;
     public boolean isExploding = false;
     private int bombSize;
-    public static int spriteLoop = 5;
+    public static int bombSpriteLoop = 6;
+    public static int explodeSpriteLoop = 5;
     private int spriteIndex = 0;
     private int indexInc;
     private int times = 0;
     private ArrayList<Flame> flames = new ArrayList<>();
+    private ArrayList<Brick> explodeBrick = new ArrayList<>();
+    private BombermanGame game;
 
     public Bomb(int x, int y, int size, BombermanGame game) {
         super(x, y, bombSprites[0]);
+        this.game = game;
         bombSize = size;
         createTime = System.currentTimeMillis();
 
@@ -125,7 +129,7 @@ public class Bomb extends Entity {
             return;
         }
         times++;
-        times %= spriteLoop;
+        times %= bombSpriteLoop;
         if (times != 1) return;
         if (spriteIndex == 2) indexInc = -1;
         if (spriteIndex == 0) indexInc = 1;
@@ -137,19 +141,46 @@ public class Bomb extends Entity {
             spriteIndex = 0;
             indexInc = 1;
             isExploding = true;
+            int posRow = y / Sprite.SIZE;
+            int posColumn =  x / Sprite.SIZE;
+            for (int j = posColumn - 1; j >= posColumn - bombSize; j--) {
+                if (game.staticEntities[posRow][j] instanceof Brick) {
+                    ((Brick) game.staticEntities[posRow][j]).isExploding = true;
+                }
+                if (!(game.staticEntities[posRow][j] instanceof Grass)) break;
+            }
+            for (int j = posColumn + 1; j <= posColumn + bombSize; j++) {
+                if (game.staticEntities[posRow][j] instanceof Brick) {
+                    ((Brick) game.staticEntities[posRow][j]).isExploding = true;
+                }
+                if (!(game.staticEntities[posRow][j] instanceof Grass)) break;
+            }
+            for (int i = posRow - 1; i >= posRow - bombSize; i--) {
+                if (game.staticEntities[i][posColumn] instanceof Brick) {
+                    ((Brick) game.staticEntities[i][posColumn]).isExploding = true;
+                }
+                if (!(game.staticEntities[i][posColumn] instanceof Grass)) break;
+            }
+            for (int i = posRow + 1; i <= posRow + bombSize; i++) {
+                if (game.staticEntities[i][posColumn] instanceof Brick) {
+                    ((Brick) game.staticEntities[i][posColumn]).isExploding = true;
+                }
+                if (!(game.staticEntities[i][posColumn] instanceof Grass)) break;
+            }
+
         }
     }
 
     public void exploding() {
         times++;
-        times %= spriteLoop;
-        if (times != 1) return;
-        if (spriteIndex == 2 && indexInc == 1) indexInc = -1;
-        spriteIndex += indexInc;
+        times %= explodeSpriteLoop;
         mainSprite = explodeSprites[spriteIndex];
         for (Flame flame : flames) {
             flame.setMainSprite(flame.sprites[spriteIndex]);
         }
+        if (times != 0) return;
+        spriteIndex += indexInc;
+        if (spriteIndex == 2 && indexInc == 1) indexInc = -1;
         if (spriteIndex == 0 && indexInc == -1) isRunning = false;
     }
 

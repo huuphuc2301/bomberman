@@ -77,6 +77,16 @@ public class BombermanGame extends JPanel {
         Graphics g = scene.getGraphics();
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 31; j++) {
+                if (staticEntities[i][j] instanceof Brick && ((Brick) staticEntities[i][j]).isDestroyed) {
+                    staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
+                    continue;
+                }
+                if (staticEntities[i][j] instanceof Brick){
+                    ((Brick) staticEntities[i][j]).run();
+                }
+                if (staticEntities[i][j] instanceof Brick && ((Brick) staticEntities[i][j]).isExploding) {
+                    new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass).draw(g);
+                }
                 staticEntities[i][j].draw(g);
             }
         }
@@ -164,7 +174,6 @@ public class BombermanGame extends JPanel {
             }
         }
     }
-
 
     public static void main(String[] args) {
         JFrame mainFrame = new JFrame("bomberman");
