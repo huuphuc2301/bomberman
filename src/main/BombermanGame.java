@@ -15,14 +15,15 @@ public class BombermanGame extends JPanel {
     public static final int HEIGHT = Sprite.SIZE * 13 ;
     public static final int FRAME_WIDTH = WIDTH + 13;
     public static final int FRAME_HEIGHT = HEIGHT + 120;
-    public static int numColumns=31;
-    public static int numRows=13;
+    public static int numColumns = 31;
+    public static int numRows = 13;
     public Entity[][] staticEntities = new Entity[13][31];
     public Bomber bomber = new Bomber(Sprite.SIZE, Sprite.SIZE);
-    public ArrayList<Enemy> enemies=new ArrayList<Enemy>();
     BufferedImage scene = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     public String mapPath;
-    char[][] currentMap = new char[13][31];
+    public ArrayList<Enemy> enemies = new ArrayList<>();
+    public ArrayList<Bomb> bombs = new ArrayList<>();
+
     public BombermanGame(String mapPath) {
         this.mapPath = mapPath;
     }
@@ -80,13 +81,19 @@ public class BombermanGame extends JPanel {
             }
         }
 
-        bomber.move(this);
-        bomber.draw(g);
-
-        for (int i=0;i<enemies.size();i++) {
+        for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).move(this);
             enemies.get(i).draw(g);
         }
+        bombs.removeIf(bomb -> bomb.isRunning == false);
+        for (Bomb bomb : bombs) {
+            bomb.run();
+            bomb.draw(g);
+        }
+
+        bomber.move(this);
+        bomber.draw(g);
+
     }
 
     public void addListener(BombermanGame game) {
@@ -110,6 +117,16 @@ public class BombermanGame extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) {
                     bomber.down = true;
                 }
+
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    if (bombs.size() == bomber.getMaxBomb()) return;
+                    Point pos = Map.getPosition(bomber.getCenter().x, bomber.getCenter().y);
+                    if (!(staticEntities[pos.x][pos.y] instanceof Grass)) return;
+                    for (Bomb bomb : bombs) {
+                        if (pos.equals(Map.getPosition(bomb.getX(), bomb.getY()))) return;
+                    }
+                    bombs.add(new Bomb(pos.y * Sprite.SIZE, pos.x * Sprite.SIZE, bomber.getBombSize(), game));
+                }
             }
 
             @Override
@@ -130,7 +147,7 @@ public class BombermanGame extends JPanel {
         });
     }
     public void setTargetEnemies() {
-        for (int i=0;i<enemies.size();i++)
+        for (int i = 0; i < enemies.size(); i++)
             enemies.get(i).setTarget(this);
     }
     public void start() {
@@ -141,7 +158,7 @@ public class BombermanGame extends JPanel {
             drawGame();
             this.getGraphics().drawImage(scene, 0, 0, null);
             try {
-                Thread.sleep(12);
+                Thread.sleep(11);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
