@@ -90,10 +90,11 @@ public class BombermanGame extends JPanel {
 
                 if (staticEntities[i][j] instanceof Bomb) {
                     Grass grass=new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
-                    if (!bombs.contains((Bomb) staticEntities[i][j])) {
-                        staticEntities[i][j]=grass;
+                    if (!((Bomb) staticEntities[i][j]).isRunning) {
+                        staticEntities[i][j] = grass;
                     }
-                    else grass.draw(g);
+                    grass.draw(g);
+                    continue;
                 }
                 staticEntities[i][j].draw(g);
             }
@@ -143,9 +144,9 @@ public class BombermanGame extends JPanel {
                     for (Bomb bomb : bombs) {
                         if (pos.equals(Map.getPosition(bomb.getX(), bomb.getY()))) return;
                     }
-                    Bomb newBomb=new Bomb(pos.y * Sprite.SIZE, pos.x * Sprite.SIZE, bomber.getBombSize(), game);
+                    Bomb newBomb = new Bomb(pos.y * Sprite.SIZE, pos.x * Sprite.SIZE, bomber.getBombSize(), game);
                     bombs.add(newBomb);
-                    staticEntities[pos.x][pos.y]=newBomb;
+                    staticEntities[pos.x][pos.y] = newBomb;
                 }
             }
 
@@ -167,8 +168,7 @@ public class BombermanGame extends JPanel {
         });
     }
     public void setTargetEnemies() {
-        for (int i = 0; i < enemies.size(); i++)
-            enemies.get(i).setTarget(this);
+        for (Enemy enemy : enemies) enemy.setTarget(this);
     }
     public void start() {
         loadMap(mapPath);
@@ -178,7 +178,7 @@ public class BombermanGame extends JPanel {
             drawGame();
             this.getGraphics().drawImage(scene, 0, 0, null);
             try {
-                Thread.sleep(11);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -8,8 +8,8 @@ import java.awt.*;
 
 public class Bomber extends MovingEntity {
     public static final int SPEED = 1;
-    private int bombSize = 2;
-    private int maxBomb = 5;
+    private int bombSize = 1;
+    private int maxBomb = 2;
     public static Sprite[] bomberSprites = {
             Sprite.player_right,
             Sprite.player_right_1,
