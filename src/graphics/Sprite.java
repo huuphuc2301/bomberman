@@ -215,4 +215,11 @@ public class Sprite {
     public static Sprite powerup_detonator = new Sprite("images\\powerup_detonator.png", 16, 16);
     public static Sprite powerup_bombpass = new Sprite("images\\powerup_bombpass.png", 16, 16);
     public static Sprite powerup_flamepass = new Sprite("images\\powerup_flamepass.png", 16, 16);
+
+    /*
+	|--------------------------------------------------------------------------
+	| Transpanrent
+	|--------------------------------------------------------------------------
+	 */
+    public static Sprite transparent = new Sprite("images\\transparent.png", 16, 16);
 }

@@ -8,8 +8,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public abstract class MovingEntity extends Entity {
-    private Sprite[] movingSprites = new Sprite[12];
-    private Sprite[] deadSprites = new Sprite[3];
+    private Sprite[] movingSprites;
+    private Sprite[] deadSprites;
     private int rightIndex = 0;
     private int leftIndex = 3;
     private int upIndex = 6;
@@ -17,8 +17,10 @@ public abstract class MovingEntity extends Entity {
     private int speed;
     private int times = 0;
     private int spriteLoop = 5;
+    private int spriteIndex = 0;
     public boolean left, right, up, down;
-
+    public boolean isDead = false;
+    public boolean isDying = false;
 
     public int getSpeed() {
         return speed;
@@ -34,8 +36,8 @@ public abstract class MovingEntity extends Entity {
 
     public MovingEntity(int x, int y, Sprite[] movingSprites, Sprite[] deadSprites) {
         super(x, y, movingSprites[0]);
-        for (int i = 0; i < 12; i++) this.movingSprites[i] = movingSprites[i];
-        for (int i = 0; i < 3; i++) this.deadSprites[i] = deadSprites[i];
+        this.movingSprites = movingSprites;
+        this.deadSprites = deadSprites;
     }
 
     public void moveRight(BombermanGame game) {
@@ -56,7 +58,6 @@ public abstract class MovingEntity extends Entity {
                 maxX = j * Sprite.SIZE;
                 if (x + speed > maxX - getWidth()) {
                     ((Enemy) this).setTarget(game);
-                    System.out.println(((Enemy) this).targetX);
                 }
             }
             if (!(game.staticEntities[pos.x][j] instanceof Grass)) {
@@ -149,6 +150,24 @@ public abstract class MovingEntity extends Entity {
 
     public boolean isTouch(int targetX, int targetY) {
         return (Math.abs(x - targetX) < speed && Math.abs(y - targetY) < speed);
+    }
+
+    public abstract void move(BombermanGame game);
+
+    public void die() {
+        isDying = true;
+        times = 0;
+        spriteIndex = 0;
+        spriteLoop = 17;
+    }
+
+    public void dying() {
+        mainSprite = deadSprites[spriteIndex];
+        times++;
+        times %= spriteLoop;
+        if (times != 0) return;
+        spriteIndex++;
+        if (spriteIndex == deadSprites.length) isDead = true;
     }
 
 }

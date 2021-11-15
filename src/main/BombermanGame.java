@@ -100,14 +100,16 @@ public class BombermanGame extends JPanel {
             }
         }
 
-        for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).move(this);
-            enemies.get(i).draw(g);
-        }
         bombs.removeIf(bomb -> bomb.isRunning == false);
         for (Bomb bomb : bombs) {
             bomb.run();
             bomb.draw(g);
+        }
+
+        enemies.removeIf(enemy -> enemy.isDead);
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).move(this);
+            enemies.get(i).draw(g);
         }
 
         bomber.move(this);
@@ -174,11 +176,11 @@ public class BombermanGame extends JPanel {
         loadMap(mapPath);
         setTargetEnemies();
         drawGame();
-        while (true) {
+        while (!bomber.isDead) {
             drawGame();
             this.getGraphics().drawImage(scene, 0, 0, null);
             try {
-                Thread.sleep(8);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

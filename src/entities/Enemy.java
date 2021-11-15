@@ -16,7 +16,13 @@ public abstract class Enemy extends MovingEntity{
     }
 
     public abstract void setTarget(BombermanGame game);
+
+    @Override
     public void move(BombermanGame game) {
+        if (isDying) {
+            dying();
+            return;
+        }
         if (targetX < 0) {
             setTarget(game);
         }
@@ -26,9 +32,9 @@ public abstract class Enemy extends MovingEntity{
             setTarget(game);
             return;
         }
-        if (x<targetX) moveRight(game);
-        if (x>targetX) moveLeft(game);
-        if (y<targetY) moveDown(game);
-        if (y>targetY) moveUp(game);
+        if (x < targetX) moveRight(game);
+        if (x > targetX) moveLeft(game);
+        if (y < targetY) moveDown(game);
+        if (y > targetY) moveUp(game);
     }
 }

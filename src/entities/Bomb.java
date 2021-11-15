@@ -2,6 +2,7 @@ package entities;
 
 import graphics.Sprite;
 import main.BombermanGame;
+import main.Map;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -70,7 +71,6 @@ public class Bomb extends Grass {
 
     }
 
-
     public void run() {
         if (isExploding) {
             exploding();
@@ -91,95 +91,112 @@ public class Bomb extends Grass {
     }
 
     public void explode(BombermanGame game) {
-            times = 0;
-            spriteIndex = 0;
-            indexInc = 1;
-            isExploding = true;
-            int posRow = y / Sprite.SIZE;
-            int posColumn =  x / Sprite.SIZE;
+        times = 0;
+        spriteIndex = 0;
+        indexInc = 1;
+        isExploding = true;
+        int posRow = y / Sprite.SIZE;
+        int posColumn =  x / Sprite.SIZE;
 
-            int num = 0;
-            for (int j = posColumn + 1; j <= posColumn + bombSize; j++) {
-                if (game.staticEntities[posRow][j] instanceof Brick) {
-                    ((Brick) game.staticEntities[posRow][j]).isExploding = true;
-                    break;
-                }
-                if (game.staticEntities[posRow][j] instanceof Bomb && !((Bomb) game.staticEntities[posRow][j]).isExploding) {
-                    ((Bomb) game.staticEntities[posRow][j]).explode(game);
-                    break;
-                }
-                if (game.staticEntities[posRow][j] instanceof Grass
-                        && !(game.staticEntities[posRow][j] instanceof Bomb)) {
-                    if (j - posColumn < bombSize) {
-                        flames.add(new Flame(j * Sprite.SIZE,posRow * Sprite.SIZE,  horizontalSprites));
-                    }
-                    else flames.add(new Flame((posColumn + bombSize) * Sprite.SIZE, posRow * Sprite.SIZE, rightprites));
-                }
-                else break;;
-            }
+        flames.add(new Flame(posColumn * Sprite.SIZE, posRow * Sprite.SIZE, explodeSprites));
 
-            for (int j = posColumn - 1; j >= posColumn - bombSize; j--) {
-                if (game.staticEntities[posRow][j] instanceof Brick) {
-                    ((Brick) game.staticEntities[posRow][j]).isExploding = true;
-                    break;
-                }
-                if (game.staticEntities[posRow][j] instanceof Bomb && !((Bomb) game.staticEntities[posRow][j]).isExploding) {
-                    ((Bomb) game.staticEntities[posRow][j]).explode(game);
-                    break;
-                }
-                if (game.staticEntities[posRow][j] instanceof Grass
-                        && !(game.staticEntities[posRow][j] instanceof Bomb)) {
-                    if (posColumn - j < bombSize) {
-                        flames.add(new Flame(j * Sprite.SIZE,posRow * Sprite.SIZE,  horizontalSprites));
-                    }
-                    else flames.add(new Flame((posColumn - bombSize) * Sprite.SIZE, posRow * Sprite.SIZE, leftprites));
-                }
-                else break;
+        for (int j = posColumn + 1; j <= posColumn + bombSize; j++) {
+            if (game.staticEntities[posRow][j] instanceof Brick) {
+                ((Brick) game.staticEntities[posRow][j]).isExploding = true;
+                break;
             }
+            if (game.staticEntities[posRow][j] instanceof Bomb && !((Bomb) game.staticEntities[posRow][j]).isExploding) {
+                ((Bomb) game.staticEntities[posRow][j]).explode(game);
+                break;
+            }
+            if (game.staticEntities[posRow][j] instanceof Grass
+                    && !(game.staticEntities[posRow][j] instanceof Bomb)) {
+                if (j - posColumn < bombSize) {
+                    flames.add(new Flame(j * Sprite.SIZE,posRow * Sprite.SIZE,  horizontalSprites));
+                }
+                else flames.add(new Flame((posColumn + bombSize) * Sprite.SIZE, posRow * Sprite.SIZE, rightprites));
+            }
+            else break;;
+        }
 
-            for (int i = posRow + 1; i <= posRow + bombSize; i++) {
-                if (game.staticEntities[i][posColumn] instanceof Brick) {
-                    ((Brick) game.staticEntities[i][posColumn]).isExploding = true;
-                    break;
-                }
-                if (game.staticEntities[i][posColumn] instanceof Bomb && !((Bomb) game.staticEntities[i][posColumn]).isExploding) {
-                    ((Bomb) game.staticEntities[i][posColumn]).explode(game);
-                    break;
-                }
-                if (game.staticEntities[i][posColumn] instanceof Grass
-                        && !(game.staticEntities[i][posColumn] instanceof Bomb)) {
-                    if (i - posRow < bombSize) {
-                        flames.add(new Flame(posColumn * Sprite.SIZE,i * Sprite.SIZE,  verticalSprites));
-                    }
-                    else flames.add(new Flame(posColumn * Sprite.SIZE, (posRow + bombSize) * Sprite.SIZE, bottomSprites));
-                }
-                else break;
+        for (int j = posColumn - 1; j >= posColumn - bombSize; j--) {
+            if (game.staticEntities[posRow][j] instanceof Brick) {
+                ((Brick) game.staticEntities[posRow][j]).isExploding = true;
+                break;
             }
+            if (game.staticEntities[posRow][j] instanceof Bomb && !((Bomb) game.staticEntities[posRow][j]).isExploding) {
+                ((Bomb) game.staticEntities[posRow][j]).explode(game);
+                break;
+            }
+            if (game.staticEntities[posRow][j] instanceof Grass
+                    && !(game.staticEntities[posRow][j] instanceof Bomb)) {
+                if (posColumn - j < bombSize) {
+                    flames.add(new Flame(j * Sprite.SIZE,posRow * Sprite.SIZE,  horizontalSprites));
+                }
+                else flames.add(new Flame((posColumn - bombSize) * Sprite.SIZE, posRow * Sprite.SIZE, leftprites));
+            }
+            else break;
+        }
 
-            for (int i = posRow - 1; i >= posRow - bombSize; i--) {
-                if (game.staticEntities[i][posColumn] instanceof Brick) {
-                    ((Brick) game.staticEntities[i][posColumn]).isExploding = true;
-                    break;
-                }
-                if (game.staticEntities[i][posColumn] instanceof Bomb && !((Bomb) game.staticEntities[i][posColumn]).isExploding) {
-                    ((Bomb) game.staticEntities[i][posColumn]).explode(game);
-                    break;
-                }
-                if (game.staticEntities[i][posColumn] instanceof Grass
-                        && !(game.staticEntities[i][posColumn] instanceof Bomb)) {
-                    if (posRow - i < bombSize) {
-                        flames.add(new Flame(posColumn * Sprite.SIZE,i * Sprite.SIZE,  verticalSprites));
-                    }
-                    else flames.add(new Flame(posColumn * Sprite.SIZE, (posRow - bombSize) * Sprite.SIZE, topSprites));
-                }
-                else break;
+        for (int i = posRow + 1; i <= posRow + bombSize; i++) {
+            if (game.staticEntities[i][posColumn] instanceof Brick) {
+                ((Brick) game.staticEntities[i][posColumn]).isExploding = true;
+                break;
             }
+            if (game.staticEntities[i][posColumn] instanceof Bomb && !((Bomb) game.staticEntities[i][posColumn]).isExploding) {
+                ((Bomb) game.staticEntities[i][posColumn]).explode(game);
+                break;
+            }
+            if (game.staticEntities[i][posColumn] instanceof Grass
+                    && !(game.staticEntities[i][posColumn] instanceof Bomb)) {
+                if (i - posRow < bombSize) {
+                    flames.add(new Flame(posColumn * Sprite.SIZE,i * Sprite.SIZE,  verticalSprites));
+                }
+                else flames.add(new Flame(posColumn * Sprite.SIZE, (posRow + bombSize) * Sprite.SIZE, bottomSprites));
+            }
+            else break;
+        }
+
+        for (int i = posRow - 1; i >= posRow - bombSize; i--) {
+            if (game.staticEntities[i][posColumn] instanceof Brick) {
+                ((Brick) game.staticEntities[i][posColumn]).isExploding = true;
+                break;
+            }
+            if (game.staticEntities[i][posColumn] instanceof Bomb && !((Bomb) game.staticEntities[i][posColumn]).isExploding) {
+                ((Bomb) game.staticEntities[i][posColumn]).explode(game);
+                break;
+            }
+            if (game.staticEntities[i][posColumn] instanceof Grass
+                    && !(game.staticEntities[i][posColumn] instanceof Bomb)) {
+                if (posRow - i < bombSize) {
+                    flames.add(new Flame(posColumn * Sprite.SIZE,i * Sprite.SIZE,  verticalSprites));
+                }
+                else flames.add(new Flame(posColumn * Sprite.SIZE, (posRow - bombSize) * Sprite.SIZE, topSprites));
+            }
+            else break;
+        }
+
     }
 
     public void exploding() {
+        for (Enemy enemy : game.enemies) {
+            for (Flame flame : flames) {
+                Point enemyPos = Map.getPosition(enemy.getCenter().x, enemy.getCenter().y);
+                Point flamePos = Map.getPosition(flame.x, flame.y);
+                if (enemyPos.x == flamePos.x && enemyPos.y == flamePos.y) {
+                    enemy.die();
+                }
+            }
+        }
+        for (Flame flame : flames) {
+            Point bomberPos = Map.getPosition(game.bomber.getCenter().x, game.bomber.getCenter().y);
+            Point flamePos = Map.getPosition(flame.x, flame.y);
+            if (bomberPos.x == flamePos.x && bomberPos.y == flamePos.y) {
+                game.bomber.die();
+            }
+        }
         times++;
         times %= explodeSpriteLoop;
-        mainSprite = explodeSprites[spriteIndex];
         for (Flame flame : flames) {
             flame.setMainSprite(flame.sprites[spriteIndex]);
         }
@@ -191,12 +208,12 @@ public class Bomb extends Grass {
 
     @Override
     public void draw(Graphics g) {
-        super.draw(g);
         if (isExploding) {
             for (Flame flame : flames) {
                 flame.draw(g);
             }
         }
+        else super.draw(g);
     }
     public long getCurrentTime() {
         return System.currentTimeMillis();

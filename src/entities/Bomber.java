@@ -8,8 +8,8 @@ import java.awt.*;
 
 public class Bomber extends MovingEntity {
     public static final int SPEED = 1;
-    private int bombSize = 2;
-    private int maxBomb = 2;
+    private int bombSize = 3;
+    private int maxBomb = 1;
     public static Sprite[] bomberSprites = {
             Sprite.player_right,
             Sprite.player_right_1,
@@ -24,6 +24,12 @@ public class Bomber extends MovingEntity {
             Sprite.player_down_1,
             Sprite.player_down_2
         };
+    public static Sprite[] deadSprites = {
+            Sprite.player_dead1,
+            Sprite.player_dead2,
+            Sprite.player_dead3,
+            Sprite.transparent
+    };
 
     public int getBombSize() {
         return bombSize;
@@ -42,7 +48,7 @@ public class Bomber extends MovingEntity {
     }
 
     public Bomber(int x, int y) {
-        super(x, y, bomberSprites, bomberSprites);
+        super(x, y, bomberSprites, deadSprites);
         this.setSpeed(SPEED);
     }
 
@@ -295,29 +301,48 @@ public class Bomber extends MovingEntity {
         if (!isMove) moveLeft(game);
     }
 
+    public void checkEnemyConflict(BombermanGame game) {
+        for (Enemy enemy : game.enemies) {
+            if (Math.abs(game.bomber.x - enemy.x) <= Sprite.SIZE - 5
+                && Math.abs(game.bomber.y - enemy.y) <= Sprite.SIZE - 5) {
+                game.bomber.die();
+            }
+        }
+    }
+
+    @Override
     public void move(BombermanGame game) {
+        if (isDying) {
+            dying();
+            return;
+        }
         int sum = 0;
         if (left) sum++; if (right) sum++; if (up) sum++; if (down) sum++;
         if (sum == 2 && up && right) {
             moveRightUp(game);
+            checkEnemyConflict(game);
             return;
         }
         if (sum == 2 && down && right) {
             moveRightDown(game);
+            checkEnemyConflict(game);
             return;
         }
         if (sum == 2 && up && left) {
             moveLeftUp(game);
+            checkEnemyConflict(game);
             return;
         }
         if (sum == 2 && down && left) {
             moveLeftDown(game);
+            checkEnemyConflict(game);
             return;
         }
         if (left) moveLeft(game);
         if (right) moveRight(game);
         if (up) moveUp(game);
         if (down) moveDown(game);
+        checkEnemyConflict(game);
     }
 
 }
