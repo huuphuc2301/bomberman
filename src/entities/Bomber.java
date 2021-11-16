@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class Bomber extends MovingEntity {
     public static final int SPEED = 1;
-    private int bombSize = 3;
+    private int bombSize = 1;
     private int maxBomb = 1;
     public static Sprite[] bomberSprites = {
             Sprite.player_right,
@@ -303,8 +303,8 @@ public class Bomber extends MovingEntity {
 
     public void checkEnemyConflict(BombermanGame game) {
         for (Enemy enemy : game.enemies) {
-            if (Math.abs(game.bomber.x - enemy.x) <= Sprite.SIZE - 5
-                && Math.abs(game.bomber.y - enemy.y) <= Sprite.SIZE - 5) {
+            if (Math.abs(game.bomber.x - enemy.x) <= Sprite.SIZE - 8
+                && Math.abs(game.bomber.y - enemy.y) <= Sprite.SIZE - 8) {
                 game.bomber.die();
             }
         }

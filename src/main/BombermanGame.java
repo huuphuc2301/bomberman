@@ -2,19 +2,21 @@ package main;
 
 import entities.*;
 import graphics.Sprite;
+import graphics.TimeScore;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class BombermanGame extends JPanel {
-    public static final int WIDTH = Sprite.SIZE * 31;
-    public static final int HEIGHT = Sprite.SIZE * 13 ;
-    public static final int FRAME_WIDTH = WIDTH + 13;
-    public static final int FRAME_HEIGHT = HEIGHT + 120;
+    public static final int WIDTH = Sprite.SIZE * 31 + 13;
+    public static final int HEIGHT = Sprite.SIZE * 13 + 108;
     public static int numColumns = 31;
     public static int numRows = 13;
     public Entity[][] staticEntities = new Entity[13][31];
@@ -23,9 +25,14 @@ public class BombermanGame extends JPanel {
     public String mapPath;
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Bomb> bombs = new ArrayList<>();
+    private long createTime, pauseTime;
+    private int timeScoreValue = 0;
+    private boolean isPaused = false;
+    private boolean nextIsPaused = true;
 
     public BombermanGame(String mapPath) {
         this.mapPath = mapPath;
+        createTime = System.currentTimeMillis();
     }
 
     void loadMap(String path) {
@@ -115,6 +122,19 @@ public class BombermanGame extends JPanel {
         bomber.move(this);
         bomber.draw(g);
 
+        TimeScore timeScore = new TimeScore((timeScoreValue + (int) (System.currentTimeMillis() - createTime)) / 1000);
+        timeScore.draw(g);
+    }
+
+    public void pauseOrUnpause() {
+        isPaused = nextIsPaused;
+        if (nextIsPaused == true) {
+            pauseTime = System.currentTimeMillis();
+        }
+        else {
+            timeScoreValue += (int) (pauseTime - createTime);
+            createTime = System.currentTimeMillis();
+        }
     }
 
     public void addListener(BombermanGame game) {
@@ -123,7 +143,6 @@ public class BombermanGame extends JPanel {
             public void keyTyped(KeyEvent e) {
 
             }
-
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
@@ -138,7 +157,6 @@ public class BombermanGame extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) {
                     bomber.down = true;
                 }
-
                 if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                     if (bombs.size() == bomber.getMaxBomb()) return;
                     Point pos = Map.getPosition(bomber.getCenter().x, bomber.getCenter().y);
@@ -149,6 +167,9 @@ public class BombermanGame extends JPanel {
                     Bomb newBomb = new Bomb(pos.y * Sprite.SIZE, pos.x * Sprite.SIZE, bomber.getBombSize(), game);
                     bombs.add(newBomb);
                     staticEntities[pos.x][pos.y] = newBomb;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    if (isPaused != nextIsPaused) pauseOrUnpause();
                 }
             }
 
@@ -166,17 +187,47 @@ public class BombermanGame extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) {
                     bomber.down = false;
                 }
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    nextIsPaused = !nextIsPaused;
+                }
             }
         });
     }
+
     public void setTargetEnemies() {
         for (Enemy enemy : enemies) enemy.setTarget(this);
     }
+
     public void start() {
         loadMap(mapPath);
+
         setTargetEnemies();
+
+        BufferedImage bottomImage = new BufferedImage(1010, 70, BufferedImage.TYPE_INT_RGB);
+        try {
+            bottomImage = ImageIO.read(new File("images\\instruction_and_time.png"));
+        } catch (IOException e) {
+            System.out.println("Error read image " + "bottom image");
+        }
+        scene.getGraphics().drawImage(bottomImage, 0, 416, null);
+
         drawGame();
-        while (!bomber.isDead) {
+
+        BufferedImage pauseImage = new BufferedImage(300, 200, BufferedImage.TYPE_INT_RGB);
+        try {
+            pauseImage = ImageIO.read(new File("images\\pause.png"));
+        } catch (IOException e) {
+            System.out.println("Error read image " + "pause image");
+        }
+
+        while (true) {
+            if (bomber.isDead) break;
+            if (this.isPaused) {
+                scene.getGraphics().drawImage(pauseImage, 345, 100, null);
+                this.getGraphics().drawImage(scene, 0, 0, null);
+                continue;
+            }
+            scene.getGraphics().drawImage(bottomImage, 0, 416, null);
             drawGame();
             this.getGraphics().drawImage(scene, 0, 0, null);
             try {
@@ -189,7 +240,7 @@ public class BombermanGame extends JPanel {
 
     public static void main(String[] args) {
         JFrame mainFrame = new JFrame("bomberman");
-        mainFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        mainFrame.setSize(BombermanGame.WIDTH, BombermanGame.HEIGHT);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
