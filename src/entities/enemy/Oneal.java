@@ -1,13 +1,17 @@
-package entities;
+package entities.enemy;
 
+import entities.Grass;
+import entities.bomber.Bomb;
+import entities.enemy.Enemy;
 import graphics.Sprite;
 import main.BombermanGame;
+import main.Map;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Oneal extends Enemy{
+public class Oneal extends Enemy {
     private static Sprite[] balloomMovingSprites = {
             Sprite.oneal_right1,
             Sprite.oneal_right2,
@@ -32,25 +36,29 @@ public class Oneal extends Enemy{
         int posY = y/Sprite.SIZE;
         ArrayList<Point> targets = new ArrayList<Point>();
         while (++posX <= game.getWidth() / Sprite.SIZE) {
-            if (game.staticEntities[posY][posX] instanceof Grass) {
+            if (!Map.isBlock(game.staticEntities[posY][posX])
+                    && !(game.staticEntities[posY][posX] instanceof Bomb)) {
                 targets.add(new Point(posX, posY));
             } else break;
         }
         posX = x/Sprite.SIZE;
         while (--posX >= 0) {
-            if (game.staticEntities[posY][posX]  instanceof Grass) {
+            if (!Map.isBlock(game.staticEntities[posY][posX])
+                    && !(game.staticEntities[posY][posX] instanceof Bomb)) {
                 targets.add(new Point(posX, posY));
             } else break;
         }
         posX = x/Sprite.SIZE;
         while (++posY < game.getHeight() / Sprite.SIZE) {
-            if (game.staticEntities[posY][posX]  instanceof Grass) {
+            if (!Map.isBlock(game.staticEntities[posY][posX])
+                    && !(game.staticEntities[posY][posX] instanceof Bomb)) {
                 targets.add(new Point(posX, posY));
             } else break;
         }
         posY = y/Sprite.SIZE;
         while (--posY >= 0) {
-            if (game.staticEntities[posY][posX]  instanceof Grass) {
+            if (!Map.isBlock(game.staticEntities[posY][posX])
+                    && !(game.staticEntities[posY][posX] instanceof Bomb)) {
                 targets.add(new Point(posX, posY));
             } else break;
         }

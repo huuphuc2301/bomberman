@@ -1,9 +1,10 @@
-package entities;
+package entities.enemy;
 
+import entities.MovingEntity;
 import graphics.Sprite;
 import main.BombermanGame;
 
-public abstract class Enemy extends MovingEntity{
+public abstract class Enemy extends MovingEntity {
     int targetX;
     int targetY;
     private static final Sprite[] deadSprites = {

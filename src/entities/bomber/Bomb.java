@@ -1,5 +1,11 @@
-package entities;
+package entities.bomber;
 
+import entities.Brick;
+import entities.Entity;
+import entities.Grass;
+import entities.enemy.Enemy;
+import entities.enemy.Oneal;
+import entities.item.Item;
 import graphics.Sprite;
 import main.BombermanGame;
 import main.Map;
@@ -7,7 +13,7 @@ import main.Map;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Bomb extends Grass {
+public class Bomb extends Entity {
     public static Sprite[] bombSprites = {
             Sprite.bomb,
             Sprite.bomb_1,
@@ -71,7 +77,7 @@ public class Bomb extends Grass {
 
     }
 
-    public void run() {
+    public void run(BombermanGame game) {
         if (isExploding) {
             exploding();
             return;
@@ -84,7 +90,7 @@ public class Bomb extends Grass {
         spriteIndex += indexInc;
         mainSprite = bombSprites[spriteIndex];
 
-        if (getCurrentTime() - createTime >= 2900) {
+        if (!game.isPaused && getCurrentTime() - game.unPauseTime + game.pauseTime - createTime >= 2000) {
             this.explode(game);
         }
 
@@ -103,6 +109,10 @@ public class Bomb extends Grass {
         for (int j = posColumn + 1; j <= posColumn + bombSize; j++) {
             if (game.staticEntities[posRow][j] instanceof Brick) {
                 ((Brick) game.staticEntities[posRow][j]).isExploding = true;
+                break;
+            }
+            if (game.staticEntities[posRow][j] instanceof Item) {
+                ((Item) game.staticEntities[posRow][j]).isExploding = true;
                 break;
             }
             if (game.staticEntities[posRow][j] instanceof Bomb && !((Bomb) game.staticEntities[posRow][j]).isExploding) {
@@ -124,6 +134,9 @@ public class Bomb extends Grass {
                 ((Brick) game.staticEntities[posRow][j]).isExploding = true;
                 break;
             }
+            if (game.staticEntities[posRow][j] instanceof Item) {
+                break;
+            }
             if (game.staticEntities[posRow][j] instanceof Bomb && !((Bomb) game.staticEntities[posRow][j]).isExploding) {
                 ((Bomb) game.staticEntities[posRow][j]).explode(game);
                 break;
@@ -143,6 +156,10 @@ public class Bomb extends Grass {
                 ((Brick) game.staticEntities[i][posColumn]).isExploding = true;
                 break;
             }
+            if (game.staticEntities[i][posColumn] instanceof Item) {
+                ((Item) game.staticEntities[i][posColumn]).isExploding = true;
+                break;
+            }
             if (game.staticEntities[i][posColumn] instanceof Bomb && !((Bomb) game.staticEntities[i][posColumn]).isExploding) {
                 ((Bomb) game.staticEntities[i][posColumn]).explode(game);
                 break;
@@ -160,6 +177,10 @@ public class Bomb extends Grass {
         for (int i = posRow - 1; i >= posRow - bombSize; i--) {
             if (game.staticEntities[i][posColumn] instanceof Brick) {
                 ((Brick) game.staticEntities[i][posColumn]).isExploding = true;
+                break;
+            }
+            if (game.staticEntities[i][posColumn] instanceof Item) {
+                ((Item) game.staticEntities[i][posColumn]).isExploding = true;
                 break;
             }
             if (game.staticEntities[i][posColumn] instanceof Bomb && !((Bomb) game.staticEntities[i][posColumn]).isExploding) {
@@ -182,7 +203,7 @@ public class Bomb extends Grass {
         for (Enemy enemy : game.enemies) {
             for (Flame flame : flames) {
                 Point enemyPos = Map.getPosition(enemy.getCenter().x, enemy.getCenter().y);
-                Point flamePos = Map.getPosition(flame.x, flame.y);
+                Point flamePos = Map.getPosition(flame.getX(), flame.getY());
                 if (enemyPos.x == flamePos.x && enemyPos.y == flamePos.y) {
                     enemy.die();
                 }
@@ -190,7 +211,7 @@ public class Bomb extends Grass {
         }
         for (Flame flame : flames) {
             Point bomberPos = Map.getPosition(game.bomber.getCenter().x, game.bomber.getCenter().y);
-            Point flamePos = Map.getPosition(flame.x, flame.y);
+            Point flamePos = Map.getPosition(flame.getX(), flame.getY());
             if (bomberPos.x == flamePos.x && bomberPos.y == flamePos.y) {
                 game.bomber.die();
             }

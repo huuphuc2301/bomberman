@@ -1,5 +1,7 @@
-package entities;
+package entities.enemy;
 
+import entities.bomber.Bomb;
+import entities.Grass;
 import graphics.Sprite;
 import main.BombermanGame;
 import main.Map;
@@ -7,7 +9,6 @@ import main.Map;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class Balloom extends Enemy {
     private static Sprite[] balloomMovingSprites = {
@@ -38,7 +39,7 @@ public class Balloom extends Enemy {
         while (++col <= game.getWidth() / Sprite.SIZE) {
             if (game.staticEntities[row][col] instanceof Bomb)
                 break;
-            if (game.staticEntities[row][col] instanceof Grass) {
+            if (!Map.isBlock(game.staticEntities[row][col])) {
                 targets.add(new Point(col, row));
             } else break;
         }
@@ -46,7 +47,7 @@ public class Balloom extends Enemy {
         while (--col >= 0) {
             if (game.staticEntities[row][col] instanceof Bomb)
                 break;
-            if (game.staticEntities[row][col]  instanceof Grass) {
+            if (!Map.isBlock(game.staticEntities[row][col])) {
                 targets.add(new Point(col, row));
             } else break;
         }
@@ -54,7 +55,7 @@ public class Balloom extends Enemy {
         while (++row < game.getHeight() / Sprite.SIZE) {
             if (game.staticEntities[row][col] instanceof Bomb)
                 break;
-            if (game.staticEntities[row][col]  instanceof Grass) {
+            if (!Map.isBlock(game.staticEntities[row][col])) {
                 targets.add(new Point(col, row));
             } else break;
         }
@@ -62,7 +63,7 @@ public class Balloom extends Enemy {
         while (--row >= 0) {
             if (game.staticEntities[row][col] instanceof Bomb)
                 break;
-            if (game.staticEntities[row][col]  instanceof Grass) {
+            if (!Map.isBlock(game.staticEntities[row][col])) {
                 targets.add(new Point(col, row));
             } else break;
         }

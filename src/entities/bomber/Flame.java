@@ -1,5 +1,6 @@
-package entities;
+package entities.bomber;
 
+import entities.Entity;
 import graphics.Sprite;
 
 public class Flame extends Entity {

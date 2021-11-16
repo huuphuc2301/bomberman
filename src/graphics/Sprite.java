@@ -196,12 +196,15 @@ public class Sprite {
 
     /*
 	|--------------------------------------------------------------------------
-	| Brick FlameSegment
+	| Brick & Item FlameSegment
 	|--------------------------------------------------------------------------
 	 */
     public static Sprite brick_exploded = new Sprite("images\\brick_exploded.png", 16, 16);
     public static Sprite brick_exploded1 = new Sprite("images\\brick_exploded1.png", 16, 16);
     public static Sprite brick_exploded2 = new Sprite("images\\brick_exploded2.png", 16, 16);
+    public static Sprite item_exploded = new Sprite("images\\item_exploded.png", 16, 16);
+    public static Sprite item_exploded1 = new Sprite("images\\item_exploded1.png", 16, 16);
+    public static Sprite item_exploded2 = new Sprite("images\\item_exploded2.png", 16, 16);
 
     /*
     |--------------------------------------------------------------------------

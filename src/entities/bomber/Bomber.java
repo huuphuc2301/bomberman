@@ -1,5 +1,9 @@
-package entities;
+package entities.bomber;
 
+import entities.Grass;
+import entities.MovingEntity;
+import entities.enemy.Enemy;
+import entities.item.Item;
 import graphics.Sprite;
 import main.BombermanGame;
 import main.Map;
@@ -54,7 +58,7 @@ public class Bomber extends MovingEntity {
 
     public boolean isFree(Point point, BombermanGame game) {
         Point pos = Map.getPosition(point.x, point.y);
-        return (game.staticEntities[pos.x][pos.y] instanceof Grass);
+        return (!Map.isBlock(game.staticEntities[pos.x][pos.y]));
     }
 
     @Override
@@ -63,17 +67,17 @@ public class Bomber extends MovingEntity {
         Point centerPos = Map.getPosition(x + getWidth() , center.y);
         Point topPos = Map.getPosition(x + getWidth() , y);
         Point bottomPos = Map.getPosition(x + getWidth() , y + getHeight() - 1);
-        if (!(game.staticEntities[centerPos.x][centerPos.y] instanceof Grass)) {
+        if (Map.isBlock(game.staticEntities[centerPos.x][centerPos.y])) {
             super.moveRight(game);
             return;
         }
-        if (game.staticEntities[topPos.x][centerPos.y] instanceof Grass
-                 && game.staticEntities[bottomPos.x][centerPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[topPos.x][centerPos.y])
+                 && !Map.isBlock(game.staticEntities[bottomPos.x][centerPos.y])) {
             super.moveRight(game);
             return;
         }
         int targetY = centerPos.x * Sprite.SIZE;
-        if (!(game.staticEntities[topPos.x][centerPos.y] instanceof Grass)) {
+        if (Map.isBlock(game.staticEntities[topPos.x][centerPos.y])) {
             if (y + getSpeed() <= targetY) super.moveDown(game);
             else {
                 setY(targetY);
@@ -92,17 +96,17 @@ public class Bomber extends MovingEntity {
         Point centerPos = Map.getPosition(x - 1, center.y);
         Point topPos = Map.getPosition(x - 1, y);
         Point bottomPos = Map.getPosition(x - 1, y + getHeight() - 1);
-        if (!(game.staticEntities[centerPos.x][centerPos.y] instanceof Grass)) {
+        if (Map.isBlock(game.staticEntities[centerPos.x][centerPos.y])) {
             super.moveLeft(game);
             return;
         }
-        if (game.staticEntities[topPos.x][centerPos.y] instanceof Grass
-                && game.staticEntities[bottomPos.x][centerPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[topPos.x][centerPos.y])
+                && !Map.isBlock(game.staticEntities[bottomPos.x][centerPos.y])) {
             super.moveLeft(game);
             return;
         }
         int targetY = centerPos.x * Sprite.SIZE;
-        if (!(game.staticEntities[topPos.x][centerPos.y] instanceof Grass)) {
+        if (Map.isBlock(game.staticEntities[topPos.x][centerPos.y])) {
             if (y + getSpeed() <= targetY) super.moveDown(game);
             else {
                 setY(targetY);
@@ -121,16 +125,16 @@ public class Bomber extends MovingEntity {
         Point centerPos = Map.getPosition(center.x, y - 1);
         Point leftPos = Map.getPosition(x, y - 1);
         Point rightPos = Map.getPosition(x + getWidth() - 1, y - 1);
-        if (!(game.staticEntities[centerPos.x][centerPos.y] instanceof Grass)) {
+        if (Map.isBlock(game.staticEntities[centerPos.x][centerPos.y])) {
             super.moveUp(game);
             return;
         }
-        if (game.staticEntities[centerPos.x][leftPos.y] instanceof Grass
-                && game.staticEntities[centerPos.x][rightPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[centerPos.x][leftPos.y])
+                && !Map.isBlock(game.staticEntities[centerPos.x][rightPos.y])) {
             super.moveUp(game);
             return;
         }
-        if (!(game.staticEntities[centerPos.x][leftPos.y] instanceof Grass)) {
+        if (Map.isBlock(game.staticEntities[centerPos.x][leftPos.y])) {
             int targetX = centerPos.y * Sprite.SIZE;
             if (x + getSpeed() <= targetX) super.moveRight(game);
             else {
@@ -151,16 +155,16 @@ public class Bomber extends MovingEntity {
         Point centerPos = Map.getPosition(center.x, y + getHeight());
         Point leftPos = Map.getPosition(x, y + getHeight());
         Point rightPos = Map.getPosition(x + getWidth() - 1, y + getHeight());
-        if (!(game.staticEntities[centerPos.x][centerPos.y] instanceof Grass)) {
+        if (Map.isBlock(game.staticEntities[centerPos.x][centerPos.y])) {
             super.moveDown(game);
             return;
         }
-        if (game.staticEntities[centerPos.x][leftPos.y] instanceof Grass
-                && game.staticEntities[centerPos.x][rightPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[centerPos.x][leftPos.y])
+                && !Map.isBlock(game.staticEntities[centerPos.x][rightPos.y])) {
             super.moveDown(game);
             return;
         }
-        if (!(game.staticEntities[centerPos.x][leftPos.y] instanceof Grass)) {
+        if (Map.isBlock(game.staticEntities[centerPos.x][leftPos.y])) {
             int targetX = centerPos.y * Sprite.SIZE;
             if (x + getSpeed() <= targetX) super.moveRight(game);
             else {
@@ -192,13 +196,13 @@ public class Bomber extends MovingEntity {
         boolean isMove = false;
         Point rightTop = new Point(x + getWidth() - 1, y);
         Point rightPos = Map.getPosition(rightTop.x + 1, rightTop.y);
-        if (game.staticEntities[rightPos.x][rightPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[rightPos.x][rightPos.y])) {
             moveRight(game);
             isMove = true;
         }
         rightTop = new Point(x + getWidth() - 1, y);
         Point topPos = Map.getPosition(rightTop.x,rightTop.y - 1);
-        if (game.staticEntities[topPos.x][topPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[topPos.x][topPos.y])) {
             moveUp(game);
             isMove = true;
         }
@@ -223,14 +227,14 @@ public class Bomber extends MovingEntity {
         boolean isMove = false;
         Point rightBottom = new Point(x + getWidth() - 1, y + getHeight() - 1);
         Point rightPos = Map.getPosition(rightBottom.x + 1, rightBottom.y);
-        if (game.staticEntities[rightPos.x][rightPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[rightPos.x][rightPos.y])) {
             moveRight(game);
             isMove = true;
         }
 
         rightBottom = new Point(x + getWidth() - 1, y + getHeight() - 1);
         Point bottomPos = Map.getPosition(rightBottom.x,rightBottom.y + 1);
-        if (game.staticEntities[bottomPos.x][bottomPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[bottomPos.x][bottomPos.y])) {
             moveDown(game);
             isMove = true;
         }
@@ -256,14 +260,14 @@ public class Bomber extends MovingEntity {
         Point leftPos = Map.getPosition(leftTop.x - 1, leftTop.y);
 
         boolean isMove = false;
-        if (game.staticEntities[leftPos.x][leftPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[leftPos.x][leftPos.y])) {
             moveLeft(game);
             isMove = true;
         }
 
         leftTop = new Point(x, y);
         Point topPos = Map.getPosition(leftTop.x,leftTop.y - 1);
-        if (game.staticEntities[topPos.x][topPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[topPos.x][topPos.y])) {
             moveUp(game);
             isMove = true;
         }
@@ -288,13 +292,13 @@ public class Bomber extends MovingEntity {
         boolean isMove = false;
         Point leftBottom = new Point(x, y + getHeight() - 1);
         Point leftPos = Map.getPosition(leftBottom.x - 1, leftBottom.y);
-        if (game.staticEntities[leftPos.x][leftPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[leftPos.x][leftPos.y])) {
             moveLeft(game);
             isMove = true;
         }
         leftBottom = new Point(x, y + getHeight() - 1);
         Point bottomPos = Map.getPosition(leftBottom.x,leftBottom.y + 1);
-        if (game.staticEntities[bottomPos.x][bottomPos.y] instanceof Grass) {
+        if (!Map.isBlock(game.staticEntities[bottomPos.x][bottomPos.y])) {
             moveDown(game);
             isMove = true;
         }
@@ -303,10 +307,17 @@ public class Bomber extends MovingEntity {
 
     public void checkEnemyConflict(BombermanGame game) {
         for (Enemy enemy : game.enemies) {
-            if (Math.abs(game.bomber.x - enemy.x) <= Sprite.SIZE - 10
-                && Math.abs(game.bomber.y - enemy.y) <= Sprite.SIZE - 10) {
+            if (!enemy.isDying && Math.abs(game.bomber.x - enemy.getX()) <= Sprite.SIZE - 10
+                && Math.abs(game.bomber.y - enemy.getY()) <= Sprite.SIZE - 10) {
                 game.bomber.die();
             }
+        }
+    }
+
+    public void checkItemConflic(BombermanGame game) {
+        Point pos = Map.getPosition(game.bomber.getCenter().x, game.bomber.getCenter().y);
+        if (game.staticEntities[pos.x][pos.y] instanceof Item) {
+            ((Item) game.staticEntities[pos.x][pos.y]).upgrade(game.bomber);
         }
     }
 
@@ -321,21 +332,25 @@ public class Bomber extends MovingEntity {
         if (sum == 2 && up && right) {
             moveRightUp(game);
             checkEnemyConflict(game);
+            checkItemConflic(game);
             return;
         }
         if (sum == 2 && down && right) {
             moveRightDown(game);
             checkEnemyConflict(game);
+            checkItemConflic(game);
             return;
         }
         if (sum == 2 && up && left) {
             moveLeftUp(game);
             checkEnemyConflict(game);
+            checkItemConflic(game);
             return;
         }
         if (sum == 2 && down && left) {
             moveLeftDown(game);
             checkEnemyConflict(game);
+            checkItemConflic(game);
             return;
         }
         if (left) moveLeft(game);
@@ -343,6 +358,7 @@ public class Bomber extends MovingEntity {
         if (up) moveUp(game);
         if (down) moveDown(game);
         checkEnemyConflict(game);
+        checkItemConflic(game);
     }
 
 }

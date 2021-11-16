@@ -1,5 +1,8 @@
 package main;
 
+import entities.Brick;
+import entities.Entity;
+import entities.Wall;
 import graphics.Sprite;
 
 import java.awt.*;
@@ -20,6 +23,10 @@ public class Map {
 
     public static Point getPosition(int x, int y) {
         return new Point(y / Sprite.SIZE, x / Sprite.SIZE);
+    }
+
+    public static boolean isBlock(Entity entity) {
+        return (entity instanceof Wall || entity instanceof Brick);
     }
 
     void readMap(String path) {

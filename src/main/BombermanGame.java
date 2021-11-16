@@ -1,6 +1,13 @@
 package main;
 
 import entities.*;
+import entities.bomber.Bomb;
+import entities.bomber.Bomber;
+import entities.enemy.Balloom;
+import entities.enemy.Enemy;
+import entities.enemy.Oneal;
+import entities.item.BombItem;
+import entities.item.Item;
 import graphics.Sprite;
 import graphics.TimeScore;
 
@@ -25,15 +32,17 @@ public class BombermanGame extends JPanel {
     public String mapPath;
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Bomb> bombs = new ArrayList<>();
-    private long createTime, pauseTime;
+    public long createTime, pauseTime, unPauseTime;
     private int timeScoreValue = 0;
-    private boolean isPaused = false;
+    public boolean isPaused = false;
     private boolean nextIsPaused = true;
 
     public BombermanGame(String mapPath) {
         this.mapPath = mapPath;
         createTime = System.currentTimeMillis();
     }
+
+
 
     void loadMap(String path) {
         char[][] originMap = new Map(path).originMap;
@@ -49,7 +58,9 @@ public class BombermanGame extends JPanel {
                         break;
                     }
                     case Map.BOMB_ITEM: {
+                        Item bombItem = new BombItem(j * Sprite.SIZE, i * Sprite.SIZE);
                         staticEntities[i][j] = new Brick(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.brick);
+                        ((Brick) staticEntities[i][j]).setItem(bombItem);
                         break;
                     }
                     case Map.FLAME_ITEM: {
@@ -61,15 +72,13 @@ public class BombermanGame extends JPanel {
                         break;
                     }
                     case Map.BALLOOM: {
+                        enemies.add(new Balloom(j * Sprite.SIZE, i * Sprite.SIZE));
                         staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
-                        Balloom balloom=new Balloom(j * Sprite.SIZE, i * Sprite.SIZE);
-                        enemies.add(balloom);
                         break;
                     }
                     case Map.ONEAL: {
+                        enemies.add(new Oneal(j * Sprite.SIZE, i * Sprite.SIZE));
                         staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
-                        Oneal oneal=new Oneal(j * Sprite.SIZE, i * Sprite.SIZE);
-                        enemies.add(oneal);
                         break;
                     }
                     default:
@@ -80,23 +89,50 @@ public class BombermanGame extends JPanel {
 
     }
 
-    public void drawGame() {
+    public void runAndDraw() {
         Graphics g = scene.getGraphics();
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 31; j++) {
                 if (staticEntities[i][j] instanceof Brick && ((Brick) staticEntities[i][j]).isDestroyed) {
+                    if (((Brick) staticEntities[i][j]).getItem() == null) {
+                        staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
+                    }
+                    else {
+                        staticEntities[i][j] = ((Brick) staticEntities[i][j]).getItem();
+                    }
+                    continue;
+                }
+
+                if (staticEntities[i][j] instanceof Item && ((Item) staticEntities[i][j]).isDestroyed) {
+                    staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
+                    Oneal newOneal = new Oneal(j * Sprite.SIZE, i* Sprite.SIZE);
+                    newOneal.setTarget(this);
+                    enemies.add(newOneal);
+                    continue;
+                }
+                if (staticEntities[i][j] instanceof Item && ((Item) staticEntities[i][j]).isUsed) {
                     staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
                     continue;
                 }
-                if (staticEntities[i][j] instanceof Brick){
-                    ((Brick) staticEntities[i][j]).run();
-                }
+
+
+                if (staticEntities[i][j] instanceof Brick) ((Brick) staticEntities[i][j]).run();
+                if (staticEntities[i][j] instanceof Item) ((Item) staticEntities[i][j]).run();
+
                 if (staticEntities[i][j] instanceof Brick && ((Brick) staticEntities[i][j]).isExploding) {
+                    if (((Brick) staticEntities[i][j]).getItem() == null) {
+                        new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass).draw(g);
+                    }
+                    else {
+                        ((Brick) staticEntities[i][j]).getItem().draw(g);
+                    }
+                }
+                if (staticEntities[i][j] instanceof Item && ((Item) staticEntities[i][j]).isExploding) {
                     new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass).draw(g);
                 }
 
                 if (staticEntities[i][j] instanceof Bomb) {
-                    Grass grass=new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
+                    Grass grass = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
                     if (!((Bomb) staticEntities[i][j]).isRunning) {
                         staticEntities[i][j] = grass;
                     }
@@ -109,7 +145,7 @@ public class BombermanGame extends JPanel {
 
         bombs.removeIf(bomb -> bomb.isRunning == false);
         for (Bomb bomb : bombs) {
-            bomb.run();
+            bomb.run(this);
             bomb.draw(g);
         }
 
@@ -132,6 +168,7 @@ public class BombermanGame extends JPanel {
             pauseTime = System.currentTimeMillis();
         }
         else {
+            unPauseTime = System.currentTimeMillis();
             timeScoreValue += (int) (pauseTime - createTime);
             createTime = System.currentTimeMillis();
         }
@@ -145,6 +182,7 @@ public class BombermanGame extends JPanel {
             }
             @Override
             public void keyPressed(KeyEvent e) {
+                if (isPaused && e.getKeyCode() != KeyEvent.VK_ESCAPE) return;
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     bomber.right = true;
                 }
@@ -211,13 +249,20 @@ public class BombermanGame extends JPanel {
         }
         scene.getGraphics().drawImage(bottomImage, 0, 416, null);
 
-        drawGame();
+        runAndDraw();
 
         BufferedImage pauseImage = new BufferedImage(300, 200, BufferedImage.TYPE_INT_RGB);
         try {
             pauseImage = ImageIO.read(new File("images\\pause.png"));
         } catch (IOException e) {
             System.out.println("Error read image " + "pause image");
+        }
+
+        BufferedImage loseImage = new BufferedImage(300, 200, BufferedImage.TYPE_INT_RGB);
+        try {
+            loseImage = ImageIO.read(new File("images\\lose.png"));
+        } catch (IOException e) {
+            System.out.println("Error read image " + "lose image");
         }
 
         while (true) {
@@ -228,12 +273,19 @@ public class BombermanGame extends JPanel {
                 continue;
             }
             scene.getGraphics().drawImage(bottomImage, 0, 416, null);
-            drawGame();
+            runAndDraw();
             this.getGraphics().drawImage(scene, 0, 0, null);
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+        }
+
+        if (bomber.isDead) {
+            scene.getGraphics().drawImage(loseImage, 340, 100, null);
+            while (true) {
+                this.getGraphics().drawImage(scene, 0, 0, null);
             }
         }
     }

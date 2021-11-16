@@ -1,31 +1,25 @@
-package entities;
+package entities.item;
 
-import entities.item.Item;
+import entities.Entity;
+import entities.Grass;
+import entities.bomber.Bomber;
 import graphics.Sprite;
 
-public class Brick extends Entity {
+public abstract class Item extends Entity {
     private static Sprite[] explodeSprites = {
-            Sprite.brick_exploded,
-            Sprite.brick_exploded1,
-            Sprite.brick_exploded2
+            Sprite.item_exploded,
+            Sprite.item_exploded1,
+            Sprite.item_exploded2
     };
     private int spriteLoop = 7;
     private int times = 0;
     public boolean isExploding = false;
     public boolean isDestroyed = false;
+    public boolean isUsed = false;
     private int explodeSpriteIndex = 0;
-    private Item item;
 
-    public Brick(int x, int y, Sprite sprite) {
+    public Item(int x, int y, Sprite sprite) {
         super(x, y, sprite);
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
-    public Item getItem() {
-        return item;
     }
 
     public void run() {
@@ -37,4 +31,7 @@ public class Brick extends Entity {
         explodeSpriteIndex++;
         if (explodeSpriteIndex == 3) isDestroyed = true;
     }
+
+    public abstract void upgrade(Bomber bomber);
+
 }

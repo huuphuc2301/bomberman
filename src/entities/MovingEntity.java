@@ -1,11 +1,12 @@
 package entities;
 
+import entities.bomber.Bomb;
+import entities.enemy.Enemy;
 import graphics.Sprite;
 import main.BombermanGame;
 import main.Map;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public abstract class MovingEntity extends Entity {
     private Sprite[] movingSprites;
@@ -60,7 +61,7 @@ public abstract class MovingEntity extends Entity {
                     ((Enemy) this).setTarget(game);
                 }
             }
-            if (!(game.staticEntities[pos.x][j] instanceof Grass)) {
+            if (Map.isBlock(game.staticEntities[pos.x][j])) {
                 maxX = j * Sprite.SIZE;
             }
         }
@@ -87,7 +88,7 @@ public abstract class MovingEntity extends Entity {
                     ((Enemy) this).setTarget(game);
                 }
             }
-            if (!(game.staticEntities[pos.x][j] instanceof Grass)) {
+            if (Map.isBlock(game.staticEntities[pos.x][j])) {
                 minX = (j + 1) * Sprite.SIZE;
             }
         }
@@ -114,7 +115,7 @@ public abstract class MovingEntity extends Entity {
                     ((Enemy) this).setTarget(game);
                 }
             }
-            if (!(game.staticEntities[i][pos.y] instanceof Grass)) {
+            if (Map.isBlock(game.staticEntities[i][pos.y])) {
                 minY = (i + 1) * Sprite.SIZE;
             }
         }
@@ -141,7 +142,7 @@ public abstract class MovingEntity extends Entity {
                     ((Enemy) this).setTarget(game);
                 }
             }
-            if (!(game.staticEntities[i][pos.y] instanceof Grass)) {
+            if (Map.isBlock(game.staticEntities[i][pos.y])) {
                 maxY = i * Sprite.SIZE;
             }
         }
