@@ -303,8 +303,8 @@ public class Bomber extends MovingEntity {
 
     public void checkEnemyConflict(BombermanGame game) {
         for (Enemy enemy : game.enemies) {
-            if (Math.abs(game.bomber.x - enemy.x) <= Sprite.SIZE - 8
-                && Math.abs(game.bomber.y - enemy.y) <= Sprite.SIZE - 8) {
+            if (Math.abs(game.bomber.x - enemy.x) <= Sprite.SIZE - 10
+                && Math.abs(game.bomber.y - enemy.y) <= Sprite.SIZE - 10) {
                 game.bomber.die();
             }
         }

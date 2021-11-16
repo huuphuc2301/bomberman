@@ -54,9 +54,9 @@ public abstract class MovingEntity extends Entity {
         int maxX = 30 * Sprite.SIZE;
         if (pos.y + 1 < 31) {
             int j = pos.y + 1;
-            if (game.staticEntities[pos.x][j] instanceof Bomb && this instanceof Enemy) {
+            if (game.staticEntities[pos.x][j] instanceof Bomb) {
                 maxX = j * Sprite.SIZE;
-                if (x + speed > maxX - getWidth()) {
+                if (this instanceof Enemy && x + speed > maxX - getWidth()) {
                     ((Enemy) this).setTarget(game);
                 }
             }
@@ -81,9 +81,9 @@ public abstract class MovingEntity extends Entity {
         int minX = Sprite.SIZE;
         if (pos.y - 1 >= 0) {
             int j = pos.y - 1;
-            if (game.staticEntities[pos.x][j] instanceof Bomb && this instanceof Enemy) {
+            if (game.staticEntities[pos.x][j] instanceof Bomb) {
                 minX = (j + 1) * Sprite.SIZE;
-                if (x - speed < minX) {
+                if (this instanceof Enemy && x - speed < minX) {
                     ((Enemy) this).setTarget(game);
                 }
             }
@@ -108,9 +108,9 @@ public abstract class MovingEntity extends Entity {
         int minY = Sprite.SIZE;
         if (pos.x - 1 >= 0) {
             int i = pos.x - 1;
-            if (game.staticEntities[i][pos.y] instanceof Bomb && this instanceof Enemy) {
+            if (game.staticEntities[i][pos.y] instanceof Bomb) {
                 minY = (i + 1) * Sprite.SIZE;
-                if (y - speed < minY) {
+                if (this instanceof Enemy && y - speed < minY) {
                     ((Enemy) this).setTarget(game);
                 }
             }
@@ -135,9 +135,9 @@ public abstract class MovingEntity extends Entity {
         int maxY = 13 * Sprite.SIZE;
         if (pos.x + 1 < 13) {
             int i = pos.x + 1;
-            if (game.staticEntities[i][pos.y] instanceof Bomb && this instanceof Enemy) {
+            if (game.staticEntities[i][pos.y] instanceof Bomb) {
                 maxY = i * Sprite.SIZE;
-                if (y + speed > maxY - getHeight()) {
+                if (this instanceof Enemy && y + speed > maxY - getHeight()) {
                     ((Enemy) this).setTarget(game);
                 }
             }
