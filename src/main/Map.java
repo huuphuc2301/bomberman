@@ -3,6 +3,7 @@ package main;
 import entities.Brick;
 import entities.Entity;
 import entities.Wall;
+import entities.bomber.Bomb;
 import graphics.Sprite;
 
 import java.awt.*;
@@ -26,7 +27,7 @@ public class Map {
     }
 
     public static boolean isBlock(Entity entity) {
-        return (entity instanceof Wall || entity instanceof Brick);
+        return (entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb);
     }
 
     void readMap(String path) {

@@ -35,7 +35,7 @@ public class Balloom extends Enemy {
     public void setTarget(BombermanGame game) {
         int col = x/Sprite.SIZE;
         int row = y/Sprite.SIZE;
-        ArrayList<Point> targets = new ArrayList<Point>();
+        ArrayList<Point> targets = new ArrayList<>();
         while (++col <= game.getWidth() / Sprite.SIZE) {
             if (game.staticEntities[row][col] instanceof Bomb)
                 break;

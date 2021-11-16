@@ -24,8 +24,8 @@ import java.util.ArrayList;
 public class BombermanGame extends JPanel {
     public static final int WIDTH = Sprite.SIZE * 31 + 13;
     public static final int HEIGHT = Sprite.SIZE * 13 + 108;
-    public static int numColumns = 31;
-    public static int numRows = 13;
+    public static final int numColumns = 31;
+    public static final int numRows = 13;
     public Entity[][] staticEntities = new Entity[13][31];
     public Bomber bomber = new Bomber(Sprite.SIZE, Sprite.SIZE);
     BufferedImage scene = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);

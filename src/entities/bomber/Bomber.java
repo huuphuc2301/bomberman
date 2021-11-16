@@ -309,7 +309,7 @@ public class Bomber extends MovingEntity {
         for (Enemy enemy : game.enemies) {
             if (!enemy.isDying && Math.abs(game.bomber.x - enemy.getX()) <= Sprite.SIZE - 10
                 && Math.abs(game.bomber.y - enemy.getY()) <= Sprite.SIZE - 10) {
-                game.bomber.die();
+                //game.bomber.die();
             }
         }
     }
