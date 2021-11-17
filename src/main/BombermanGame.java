@@ -7,7 +7,9 @@ import entities.enemy.Balloom;
 import entities.enemy.Enemy;
 import entities.enemy.Oneal;
 import entities.item.BombItem;
+import entities.item.FlameItem;
 import entities.item.Item;
+import entities.item.SpeedItem;
 import graphics.Sprite;
 import graphics.TimeScore;
 
@@ -64,11 +66,15 @@ public class BombermanGame extends JPanel {
                         break;
                     }
                     case Map.FLAME_ITEM: {
+                        Item flameItem = new FlameItem(j * Sprite.SIZE, i * Sprite.SIZE);
                         staticEntities[i][j] = new Brick(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.brick);
+                        ((Brick) staticEntities[i][j]).setItem(flameItem);
                         break;
                     }
                     case Map.SPEED_ITEM: {
+                        Item speedItem = new SpeedItem(j * Sprite.SIZE, i * Sprite.SIZE);
                         staticEntities[i][j] = new Brick(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.brick);
+                        ((Brick) staticEntities[i][j]).setItem(speedItem);
                         break;
                     }
                     case Map.BALLOOM: {
