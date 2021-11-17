@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Balloom extends Enemy {
+    private int steps;
     private static Sprite[] balloomMovingSprites = {
             Sprite.balloom_right1,
             Sprite.balloom_right2,
@@ -32,37 +33,36 @@ public class Balloom extends Enemy {
     }
 
     @Override
+    public void move(BombermanGame game) {
+        steps=(steps+1)%4;
+        if (steps==0) return;
+        super.move(game);
+    }
+
+    @Override
     public void setTarget(BombermanGame game) {
         int col = x/Sprite.SIZE;
         int row = y/Sprite.SIZE;
         ArrayList<Point> targets = new ArrayList<>();
         while (++col <= game.getWidth() / Sprite.SIZE) {
-            if (game.staticEntities[row][col] instanceof Bomb)
-                break;
             if (!Map.isBlock(game.staticEntities[row][col])) {
                 targets.add(new Point(col, row));
             } else break;
         }
         col = x/Sprite.SIZE;
         while (--col >= 0) {
-            if (game.staticEntities[row][col] instanceof Bomb)
-                break;
             if (!Map.isBlock(game.staticEntities[row][col])) {
                 targets.add(new Point(col, row));
             } else break;
         }
         col = x/Sprite.SIZE;
         while (++row < game.getHeight() / Sprite.SIZE) {
-            if (game.staticEntities[row][col] instanceof Bomb)
-                break;
             if (!Map.isBlock(game.staticEntities[row][col])) {
                 targets.add(new Point(col, row));
             } else break;
         }
         row = y/Sprite.SIZE;
         while (--row >= 0) {
-            if (game.staticEntities[row][col] instanceof Bomb)
-                break;
             if (!Map.isBlock(game.staticEntities[row][col])) {
                 targets.add(new Point(col, row));
             } else break;

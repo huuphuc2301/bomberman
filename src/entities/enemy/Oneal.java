@@ -8,13 +8,12 @@ import main.BombermanGame;
 import main.Map;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class Oneal extends Enemy {
-    private static Sprite[] balloomMovingSprites = {
+    private int steps=0;
+    private boolean isFastMode=true;
+    private static final Sprite[] balloomMovingSprites = {
             Sprite.oneal_right1,
             Sprite.oneal_right2,
             Sprite.oneal_right3,
@@ -32,6 +31,26 @@ public class Oneal extends Enemy {
     public Oneal(int x, int y) {
         super(x, y, balloomMovingSprites);
         setSpeed(1);
+    }
+
+    @Override
+    public void move(BombermanGame game) {
+        //if (!new Random().nextBoolean()) return;
+        steps++;
+        if (steps > new Random().nextInt(10000)+100)
+        {
+            System.out.println(steps);
+            isFastMode=!isFastMode;
+            steps=0;
+        }
+        if (isFastMode) {
+            super.move(game);
+            return;
+        }
+
+        if (steps%2==0) return;
+        super.move(game);
+
     }
 
     @Override
@@ -66,20 +85,51 @@ public class Oneal extends Enemy {
                 //System.out.println(String.valueOf(newrow)+" "+String.valueOf(newcol)+" "+String.valueOf(dis[newrow][newcol]));
             }
         }
+        int row=enemyRow;
+        int col=enemyCol;
+        ArrayList<Point> points = new ArrayList<>();
+        while (++col <= game.getWidth() / Sprite.SIZE) {
+            if (!Map.isBlock(game.staticEntities[row][col])) {
+                points.add(new Point(col, row));
+            } else break;
+        }
+        col = x/Sprite.SIZE;
+        while (--col >= 0) {
+            if (!Map.isBlock(game.staticEntities[row][col])) {
+                points.add(new Point(col, row));
+            } else break;
+        }
+        col = x/Sprite.SIZE;
+        while (++row < game.getHeight() / Sprite.SIZE) {
+            if (!Map.isBlock(game.staticEntities[row][col])) {
+                points.add(new Point(col, row));
+            } else break;
+        }
+        row = y/Sprite.SIZE;
+        while (--row >= 0) {
+            if (!Map.isBlock(game.staticEntities[row][col])) {
+                points.add(new Point(col, row));
+            } else break;
+        }
+        row = y/Sprite.SIZE;
+        ArrayList<Point> targets = new ArrayList<>();
         int minDis=10001;
-        for (int i = 0; i < 4; i++) {
-            int newcol = enemyCol + X[i];
-            int newrow = enemyRow + Y[i];
-
+        for (Point point: points) {
+            int newcol = point.x;
+            int newrow = point.y;
             if (!Map.isBlock(game.staticEntities[newrow][newcol]) && minDis>dis[newrow][newcol]) {
-                targetX=newcol * Sprite.SIZE;
-                targetY=newrow * Sprite.SIZE;
                 minDis = dis[newrow][newcol];
-
+                targets.clear();
+            }
+            if (!Map.isBlock(game.staticEntities[newrow][newcol]) && minDis==dis[newrow][newcol]) {
+                targets.add(new Point(newcol,newrow));
             }
 
-
         }
+        if (targets.size()==0) targets.add(new Point(-1,-1));
+        Collections.shuffle(targets);
+        targetX = targets.get(0).x * Sprite.SIZE;
+        targetY = targets.get(0).y * Sprite.SIZE;
         //System.out.println(String.valueOf(minDis)+" "+String.valueOf(targetY/Sprite.SIZE)+" "+String.valueOf(targetX/Sprite.SIZE));
 
     }
