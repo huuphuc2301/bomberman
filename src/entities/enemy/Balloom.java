@@ -12,7 +12,7 @@ import java.util.Collections;
 
 public class Balloom extends Enemy {
     private int steps;
-    private static Sprite[] balloomMovingSprites = {
+    private static Sprite[] movingSprites = {
             Sprite.balloom_right1,
             Sprite.balloom_right2,
             Sprite.balloom_right3,
@@ -26,9 +26,14 @@ public class Balloom extends Enemy {
             Sprite.balloom_left2,
             Sprite.balloom_left3,
     };
-
+    private static final Sprite[] deadSprites = {
+            Sprite.balloom_dead,
+            Sprite.mob_dead1,
+            Sprite.mob_dead2,
+            Sprite.mob_dead3,
+    };
     public Balloom(int x, int y) {
-        super(x, y, balloomMovingSprites);
+        super(x, y, movingSprites,deadSprites);
         setSpeed(1);
     }
 

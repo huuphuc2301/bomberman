@@ -9,7 +9,9 @@ import entities.item.Item;
 import graphics.Sprite;
 import main.BombermanGame;
 import main.Map;
+import sounds.Sound;
 
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -74,7 +76,7 @@ public class Bomb extends Entity {
         this.game = game;
         bombSize = size;
         createTime = System.currentTimeMillis();
-
+        Sound.play(Sound.drop_bomb_path);
     }
 
     public void run(BombermanGame game) {
@@ -97,6 +99,7 @@ public class Bomb extends Entity {
     }
 
     public void explode(BombermanGame game) {
+        Sound.play(Sound.explosion_path);
         times = 0;
         spriteIndex = 0;
         indexInc = 1;

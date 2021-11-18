@@ -1,10 +1,12 @@
 package entities;
 
 import entities.bomber.Bomb;
+import entities.bomber.Bomber;
 import entities.enemy.Enemy;
 import graphics.Sprite;
 import main.BombermanGame;
 import main.Map;
+import sounds.Sound;
 
 import java.awt.*;
 
@@ -156,10 +158,14 @@ public abstract class MovingEntity extends Entity {
     public abstract void move(BombermanGame game);
 
     public void die() {
+        if (isDying) return;
         isDying = true;
         times = 0;
         spriteIndex = 0;
-        spriteLoop = 17;
+        if (this instanceof Bomber) spriteLoop = 35;
+        else spriteLoop=25;
+        if (this instanceof Bomber) Sound.play(Sound.bomber_die_path);
+        else Sound.play(Sound.enemy_die_path);
     }
 
     public void dying() {
@@ -167,6 +173,7 @@ public abstract class MovingEntity extends Entity {
         times++;
         times %= spriteLoop;
         if (times != 0) return;
+        if (spriteIndex==0) spriteLoop=15;
         spriteIndex++;
         if (spriteIndex == deadSprites.length) isDead = true;
     }

@@ -12,6 +12,8 @@ import entities.item.Item;
 import entities.item.SpeedItem;
 import graphics.Sprite;
 import graphics.TimeScore;
+import javazoom.jl.player.Player;
+import sounds.Sound;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 
 public class BombermanGame extends JPanel {
     public static final int WIDTH = Sprite.SIZE * 31 + 13;
-    public static final int HEIGHT = Sprite.SIZE * 13 + 108;
+    public static final int HEIGHT = Sprite.SIZE * 13 + 208;
     public static final int numColumns = 31;
     public static final int numRows = 13;
     public Entity[][] staticEntities = new Entity[13][31];
@@ -43,7 +45,6 @@ public class BombermanGame extends JPanel {
         this.mapPath = mapPath;
         createTime = System.currentTimeMillis();
     }
-
 
 
     void loadMap(String path) {
@@ -102,8 +103,7 @@ public class BombermanGame extends JPanel {
                 if (staticEntities[i][j] instanceof Brick && ((Brick) staticEntities[i][j]).isDestroyed) {
                     if (((Brick) staticEntities[i][j]).getItem() == null) {
                         staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
-                    }
-                    else {
+                    } else {
                         staticEntities[i][j] = ((Brick) staticEntities[i][j]).getItem();
                     }
                     continue;
@@ -111,7 +111,7 @@ public class BombermanGame extends JPanel {
 
                 if (staticEntities[i][j] instanceof Item && ((Item) staticEntities[i][j]).isDestroyed) {
                     staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
-                    Oneal newOneal = new Oneal(j * Sprite.SIZE, i* Sprite.SIZE);
+                    Oneal newOneal = new Oneal(j * Sprite.SIZE, i * Sprite.SIZE);
                     newOneal.setTarget(this);
                     enemies.add(newOneal);
                     continue;
@@ -128,8 +128,7 @@ public class BombermanGame extends JPanel {
                 if (staticEntities[i][j] instanceof Brick && ((Brick) staticEntities[i][j]).isExploding) {
                     if (((Brick) staticEntities[i][j]).getItem() == null) {
                         new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass).draw(g);
-                    }
-                    else {
+                    } else {
                         ((Brick) staticEntities[i][j]).getItem().draw(g);
                     }
                 }
@@ -149,7 +148,7 @@ public class BombermanGame extends JPanel {
             }
         }
 
-        bombs.removeIf(bomb -> bomb.isRunning == false);
+        bombs.removeIf(bomb -> !bomb.isRunning);
         for (Bomb bomb : bombs) {
             bomb.run(this);
             bomb.draw(g);
@@ -170,10 +169,9 @@ public class BombermanGame extends JPanel {
 
     public void pauseOrUnpause() {
         isPaused = nextIsPaused;
-        if (nextIsPaused == true) {
+        if (nextIsPaused) {
             pauseTime = System.currentTimeMillis();
-        }
-        else {
+        } else {
             unPauseTime = System.currentTimeMillis();
             timeScoreValue += (int) (pauseTime - createTime);
             createTime = System.currentTimeMillis();
@@ -186,6 +184,7 @@ public class BombermanGame extends JPanel {
             public void keyTyped(KeyEvent e) {
 
             }
+
             @Override
             public void keyPressed(KeyEvent e) {
                 if (isPaused && e.getKeyCode() != KeyEvent.VK_ESCAPE) return;
@@ -202,7 +201,11 @@ public class BombermanGame extends JPanel {
                     bomber.down = true;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                    if (bombs.size() == bomber.getMaxBomb()) return;
+                    int notExplodingBombs = 0;
+                    for (Bomb bomb:bombs) {
+                        if (!bomb.isExploding) notExplodingBombs++;
+                    }
+                    if (bomber.isDying || notExplodingBombs == bomber.getMaxBomb()) return;
                     Point pos = Map.getPosition(bomber.getCenter().x, bomber.getCenter().y);
                     if (!(staticEntities[pos.x][pos.y] instanceof Grass)) return;
                     for (Bomb bomb : bombs) {
@@ -270,7 +273,10 @@ public class BombermanGame extends JPanel {
         } catch (IOException e) {
             System.out.println("Error read image " + "lose image");
         }
-
+        long secondTime = System.currentTimeMillis();
+        int count = 0;
+        int sleepTime = 0;
+        long startTime = System.currentTimeMillis();
         while (true) {
             if (bomber.isDead) break;
             if (this.isPaused) {
@@ -278,11 +284,21 @@ public class BombermanGame extends JPanel {
                 this.getGraphics().drawImage(scene, 0, 0, null);
                 continue;
             }
+            if (System.currentTimeMillis() - secondTime > 1000) {
+                System.out.println(sleepTime+" "+"FPS " + count);
+                count = 0;
+                secondTime = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - startTime > 16 && sleepTime > 0) sleepTime--;
+            else if (System.currentTimeMillis() - startTime < 13) sleepTime++;
+            startTime = System.currentTimeMillis();
+            count++;
+
             scene.getGraphics().drawImage(bottomImage, 0, 416, null);
             runAndDraw();
             this.getGraphics().drawImage(scene, 0, 0, null);
             try {
-                Thread.sleep(10);
+                Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -303,6 +319,7 @@ public class BombermanGame extends JPanel {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
 
+        //Sound.load();
         BombermanGame myGame = new BombermanGame("map-config\\map1.txt");
         myGame.setFocusable(true);
         myGame.requestFocusInWindow();

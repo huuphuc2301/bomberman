@@ -7,6 +7,7 @@ import entities.item.Item;
 import graphics.Sprite;
 import main.BombermanGame;
 import main.Map;
+import sounds.Sound;
 
 import java.awt.*;
 
@@ -309,7 +310,7 @@ public class Bomber extends MovingEntity {
         for (Enemy enemy : game.enemies) {
             if (!enemy.isDying && Math.abs(game.bomber.x - enemy.getX()) <= Sprite.SIZE - 10
                 && Math.abs(game.bomber.y - enemy.getY()) <= Sprite.SIZE - 10) {
-                //game.bomber.die();
+                game.bomber.die();
             }
         }
     }
@@ -317,6 +318,7 @@ public class Bomber extends MovingEntity {
     public void checkItemConflic(BombermanGame game) {
         Point pos = Map.getPosition(game.bomber.getCenter().x, game.bomber.getCenter().y);
         if (game.staticEntities[pos.x][pos.y] instanceof Item) {
+            Sound.play(Sound.item_path);
             ((Item) game.staticEntities[pos.x][pos.y]).upgrade(game.bomber);
         }
     }

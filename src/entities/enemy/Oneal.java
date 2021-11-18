@@ -1,8 +1,5 @@
 package entities.enemy;
 
-import entities.Grass;
-import entities.bomber.Bomb;
-import entities.enemy.Enemy;
 import graphics.Sprite;
 import main.BombermanGame;
 import main.Map;
@@ -13,7 +10,7 @@ import java.util.*;
 public class Oneal extends Enemy {
     private int steps = 0;
     private boolean isFastMode = true;
-    private static final Sprite[] balloomMovingSprites = {
+    private static final Sprite[] movingSprites = {
             Sprite.oneal_right1,
             Sprite.oneal_right2,
             Sprite.oneal_right3,
@@ -27,9 +24,15 @@ public class Oneal extends Enemy {
             Sprite.oneal_left2,
             Sprite.oneal_left3,
     };
-
+    private static final Sprite[] deadSprites = {
+            Sprite.oneal_dead,
+            Sprite.mob_dead1,
+            Sprite.mob_dead2,
+            Sprite.mob_dead3,
+    };
     public Oneal(int x, int y) {
-        super(x, y, balloomMovingSprites);
+        super(x, y, movingSprites,deadSprites);
+
         setSpeed(1);
     }
 

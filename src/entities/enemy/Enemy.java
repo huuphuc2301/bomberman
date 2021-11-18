@@ -7,13 +7,9 @@ import main.BombermanGame;
 public abstract class Enemy extends MovingEntity {
     int targetX;
     int targetY;
-    private static final Sprite[] deadSprites = {
-            Sprite.mob_dead1,
-            Sprite.mob_dead2,
-            Sprite.mob_dead3,
-    };
-    public Enemy(int x, int y, Sprite[] movingSprites) {
-        super(x, y, movingSprites,Enemy.deadSprites);
+
+    public Enemy(int x, int y, Sprite[] movingSprites, Sprite[] deadSprites) {
+        super(x, y, movingSprites,deadSprites);
     }
 
     public abstract void setTarget(BombermanGame game);
