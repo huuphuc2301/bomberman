@@ -1,9 +1,7 @@
 package entities.enemy;
 
-import entities.bomber.Bomb;
-import entities.Grass;
 import graphics.Sprite;
-import main.BombermanGame;
+import main.GameStage;
 import main.Map;
 
 import java.awt.*;
@@ -38,14 +36,14 @@ public class Balloom extends Enemy {
     }
 
     @Override
-    public void move(BombermanGame game) {
+    public void move(GameStage game) {
         steps=(steps+1)%4;
         if (steps==0) return;
         super.move(game);
     }
 
     @Override
-    public void setTarget(BombermanGame game) {
+    public void setTarget(GameStage game) {
         int col = x/Sprite.SIZE;
         int row = y/Sprite.SIZE;
         ArrayList<Point> targets = new ArrayList<>();

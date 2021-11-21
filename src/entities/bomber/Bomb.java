@@ -3,15 +3,14 @@ package entities.bomber;
 import entities.Brick;
 import entities.Entity;
 import entities.Grass;
+import entities.Portal;
 import entities.enemy.Enemy;
-import entities.enemy.Oneal;
 import entities.item.Item;
 import graphics.Sprite;
-import main.BombermanGame;
+import main.GameStage;
 import main.Map;
 import sounds.Sound;
 
-import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -69,9 +68,9 @@ public class Bomb extends Entity {
     private int times = 0;
     private ArrayList<Flame> flames = new ArrayList<>();
     private ArrayList<Brick> explodeBrick = new ArrayList<>();
-    private BombermanGame game;
+    private GameStage game;
 
-    public Bomb(int x, int y, int size, BombermanGame game) {
+    public Bomb(int x, int y, int size, GameStage game) {
         super(x, y, bombSprites[0]);
         this.game = game;
         bombSize = size;
@@ -79,7 +78,7 @@ public class Bomb extends Entity {
         Sound.play(Sound.drop_bomb_path);
     }
 
-    public void run(BombermanGame game) {
+    public void run(GameStage game) {
         if (isExploding) {
             exploding();
             return;
@@ -98,7 +97,7 @@ public class Bomb extends Entity {
 
     }
 
-    public void explode(BombermanGame game) {
+    public void explode(GameStage game) {
         Sound.play(Sound.explosion_path);
         times = 0;
         spriteIndex = 0;
@@ -123,7 +122,7 @@ public class Bomb extends Entity {
                 break;
             }
             if (game.staticEntities[posRow][j] instanceof Grass
-                    && !(game.staticEntities[posRow][j] instanceof Bomb)) {
+                    || game.staticEntities[posRow][j] instanceof Portal) {
                 if (j - posColumn < bombSize) {
                     flames.add(new Flame(j * Sprite.SIZE,posRow * Sprite.SIZE,  horizontalSprites));
                 }
@@ -145,7 +144,7 @@ public class Bomb extends Entity {
                 break;
             }
             if (game.staticEntities[posRow][j] instanceof Grass
-                    && !(game.staticEntities[posRow][j] instanceof Bomb)) {
+                    || game.staticEntities[posRow][j] instanceof Portal) {
                 if (posColumn - j < bombSize) {
                     flames.add(new Flame(j * Sprite.SIZE,posRow * Sprite.SIZE,  horizontalSprites));
                 }
@@ -168,7 +167,7 @@ public class Bomb extends Entity {
                 break;
             }
             if (game.staticEntities[i][posColumn] instanceof Grass
-                    && !(game.staticEntities[i][posColumn] instanceof Bomb)) {
+                    || game.staticEntities[i][posColumn] instanceof Portal) {
                 if (i - posRow < bombSize) {
                     flames.add(new Flame(posColumn * Sprite.SIZE,i * Sprite.SIZE,  verticalSprites));
                 }
@@ -191,7 +190,7 @@ public class Bomb extends Entity {
                 break;
             }
             if (game.staticEntities[i][posColumn] instanceof Grass
-                    && !(game.staticEntities[i][posColumn] instanceof Bomb)) {
+                    || game.staticEntities[i][posColumn] instanceof Portal){
                 if (posRow - i < bombSize) {
                     flames.add(new Flame(posColumn * Sprite.SIZE,i * Sprite.SIZE,  verticalSprites));
                 }

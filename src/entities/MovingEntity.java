@@ -4,7 +4,7 @@ import entities.bomber.Bomb;
 import entities.bomber.Bomber;
 import entities.enemy.Enemy;
 import graphics.Sprite;
-import main.BombermanGame;
+import main.GameStage;
 import main.Map;
 import sounds.Sound;
 
@@ -43,7 +43,7 @@ public abstract class MovingEntity extends Entity {
         this.deadSprites = deadSprites;
     }
 
-    public void moveRight(BombermanGame game) {
+    public void moveRight(GameStage game) {
         times++;
         if (times == spriteLoop) {
             rightIndex++;
@@ -70,7 +70,7 @@ public abstract class MovingEntity extends Entity {
         setX(Math.min(maxX - getWidth(), x + speed));
     }
 
-    public void moveLeft(BombermanGame game) {
+    public void moveLeft(GameStage game) {
         times++;
         if (times == spriteLoop) {
             leftIndex++;
@@ -97,7 +97,7 @@ public abstract class MovingEntity extends Entity {
         setX(Math.max(minX, x - speed));
     }
 
-    public void moveUp(BombermanGame game) {
+    public void moveUp(GameStage game) {
         times++;
         if (times == spriteLoop) {
             upIndex++;
@@ -124,7 +124,7 @@ public abstract class MovingEntity extends Entity {
         this.setY(Math.max(minY, y - speed));
     }
 
-    public void moveDown(BombermanGame game) {
+    public void moveDown(GameStage game) {
         times++;
         if (times == spriteLoop) {
             downIndex++;
@@ -155,7 +155,7 @@ public abstract class MovingEntity extends Entity {
         return (Math.abs(x - targetX) < speed && Math.abs(y - targetY) < speed);
     }
 
-    public abstract void move(BombermanGame game);
+    public abstract void move(GameStage game);
 
     public void die() {
         if (isDying) return;
@@ -163,7 +163,7 @@ public abstract class MovingEntity extends Entity {
         times = 0;
         spriteIndex = 0;
         if (this instanceof Bomber) spriteLoop = 35;
-        else spriteLoop=25;
+        else spriteLoop = 25;
         if (this instanceof Bomber) Sound.play(Sound.bomber_die_path);
         else Sound.play(Sound.enemy_die_path);
     }
@@ -173,7 +173,7 @@ public abstract class MovingEntity extends Entity {
         times++;
         times %= spriteLoop;
         if (times != 0) return;
-        if (spriteIndex==0) spriteLoop=15;
+        if (spriteIndex == 0) spriteLoop -= 10;
         spriteIndex++;
         if (spriteIndex == deadSprites.length) isDead = true;
     }

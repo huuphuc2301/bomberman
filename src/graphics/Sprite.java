@@ -225,4 +225,16 @@ public class Sprite {
 	|--------------------------------------------------------------------------
 	 */
     public static Sprite transparent = new Sprite("images\\transparent.png", 16, 16);
+
+    /*
+	|--------------------------------------------------------------------------
+	| Static Image
+	|--------------------------------------------------------------------------
+	 */
+    public static Sprite bottomOfStage = new Sprite("images\\instruction_and_time.png", 1010, 70);
+    public static Sprite pause = new Sprite("images\\pause.png", 300, 200);
+    public static Sprite lose = new Sprite("images\\lose.png", 300, 200);
+    public static Sprite win = new Sprite("images\\win.png", 300, 200);
+    public static Sprite menu = new Sprite("images\\menu.png", 1005, 524);
+    public static Sprite menuSelector = new Sprite("images\\selector.png", 70, 70);
 }

@@ -1,11 +1,11 @@
 package entities.bomber;
 
-import entities.Grass;
 import entities.MovingEntity;
+import entities.Portal;
 import entities.enemy.Enemy;
 import entities.item.Item;
 import graphics.Sprite;
-import main.BombermanGame;
+import main.GameStage;
 import main.Map;
 import sounds.Sound;
 
@@ -15,6 +15,7 @@ public class Bomber extends MovingEntity {
     public static final int SPEED = 1;
     private int bombSize = 1;
     private int maxBomb = 1;
+    public boolean inPortal = false;
     public static Sprite[] bomberSprites = {
             Sprite.player_right,
             Sprite.player_right_1,
@@ -57,13 +58,13 @@ public class Bomber extends MovingEntity {
         this.setSpeed(SPEED);
     }
 
-    public boolean isFree(Point point, BombermanGame game) {
+    public boolean isFree(Point point, GameStage game) {
         Point pos = Map.getPosition(point.x, point.y);
         return (!Map.isBlock(game.staticEntities[pos.x][pos.y]));
     }
 
     @Override
-    public void moveRight(BombermanGame game) {
+    public void moveRight(GameStage game) {
         Point center = getCenter();
         Point centerPos = Map.getPosition(x + getWidth() , center.y);
         Point topPos = Map.getPosition(x + getWidth() , y);
@@ -92,7 +93,7 @@ public class Bomber extends MovingEntity {
     }
 
     @Override
-    public void moveLeft(BombermanGame game) {
+    public void moveLeft(GameStage game) {
         Point center = getCenter();
         Point centerPos = Map.getPosition(x - 1, center.y);
         Point topPos = Map.getPosition(x - 1, y);
@@ -121,7 +122,7 @@ public class Bomber extends MovingEntity {
     }
 
     @Override
-    public void moveUp(BombermanGame game) {
+    public void moveUp(GameStage game) {
         Point center = getCenter();
         Point centerPos = Map.getPosition(center.x, y - 1);
         Point leftPos = Map.getPosition(x, y - 1);
@@ -151,7 +152,7 @@ public class Bomber extends MovingEntity {
     }
 
     @Override
-    public void moveDown(BombermanGame game) {
+    public void moveDown(GameStage game) {
         Point center = getCenter();
         Point centerPos = Map.getPosition(center.x, y + getHeight());
         Point leftPos = Map.getPosition(x, y + getHeight());
@@ -180,7 +181,7 @@ public class Bomber extends MovingEntity {
         }
     }
 
-    public void moveRightUp(BombermanGame game) {
+    public void moveRightUp(GameStage game) {
         Point rightBottom = new Point(x + getWidth(), y + getHeight() - 1);
         Point rightCenter = new Point( x + getWidth(), getCenter().y);
         if (!isFree(rightBottom, game) && isFree(rightCenter, game)) {
@@ -210,7 +211,7 @@ public class Bomber extends MovingEntity {
         if (!isMove) moveRight(game);
     }
 
-    public void moveRightDown(BombermanGame game) {
+    public void moveRightDown(GameStage game) {
         Point rightTop = new Point(x + getWidth(), y);
         Point rightCenter = new Point( x + getWidth(), getCenter().y);
         if (!isFree(rightTop, game) && isFree(rightCenter, game)) {
@@ -242,7 +243,7 @@ public class Bomber extends MovingEntity {
         if (!isMove) moveLeft(game);
     }
 
-    public void moveLeftUp(BombermanGame game) {
+    public void moveLeftUp(GameStage game) {
         Point leftBottom = new Point(x - 1, y + getHeight() - 1);
         Point leftCenter = new Point( x - 1, getCenter().y);
         if (!isFree(leftBottom, game) && isFree(leftCenter, game)) {
@@ -275,7 +276,7 @@ public class Bomber extends MovingEntity {
         if (!isMove) moveLeft(game);
     }
 
-    public void moveLeftDown(BombermanGame game) {
+    public void moveLeftDown(GameStage game) {
         Point leftTop = new Point(x - 1, y);
         Point leftCenter = new Point( x - 1, getCenter().y);
         if (!isFree(leftTop, game) && isFree(leftCenter, game)) {
@@ -306,7 +307,7 @@ public class Bomber extends MovingEntity {
         if (!isMove) moveLeft(game);
     }
 
-    public void checkEnemyConflict(BombermanGame game) {
+    public void checkEnemyConflict(GameStage game) {
         for (Enemy enemy : game.enemies) {
             if (!enemy.isDying && Math.abs(game.bomber.x - enemy.getX()) <= Sprite.SIZE - 10
                 && Math.abs(game.bomber.y - enemy.getY()) <= Sprite.SIZE - 10) {
@@ -315,16 +316,19 @@ public class Bomber extends MovingEntity {
         }
     }
 
-    public void checkItemConflic(BombermanGame game) {
+    public void checkItemConflic(GameStage game) {
         Point pos = Map.getPosition(game.bomber.getCenter().x, game.bomber.getCenter().y);
         if (game.staticEntities[pos.x][pos.y] instanceof Item) {
             Sound.play(Sound.item_path);
             ((Item) game.staticEntities[pos.x][pos.y]).upgrade(game.bomber);
         }
+        if (game.staticEntities[pos.x][pos.y] instanceof Portal) {
+            inPortal = true;
+        }
     }
 
     @Override
-    public void move(BombermanGame game) {
+    public void move(GameStage game) {
         if (isDying) {
             dying();
             return;

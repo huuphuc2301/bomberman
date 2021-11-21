@@ -1,7 +1,7 @@
 package entities.enemy;
 
 import graphics.Sprite;
-import main.BombermanGame;
+import main.GameStage;
 import main.Map;
 
 import java.awt.*;
@@ -37,7 +37,7 @@ public class Oneal extends Enemy {
     }
 
     @Override
-    public void move(BombermanGame game) {
+    public void move(GameStage game) {
         //if (!new Random().nextBoolean()) return;
         steps++;
         if (steps > new Random().nextInt(10000) + 100) {
@@ -55,7 +55,7 @@ public class Oneal extends Enemy {
     }
 
     @Override
-    public void setTarget(BombermanGame game) {
+    public void setTarget(GameStage game) {
         int enemyCol = x / Sprite.SIZE;
         int enemyRow = y / Sprite.SIZE;
         int bomberCol = game.bomber.getX() / Sprite.SIZE;
@@ -77,7 +77,7 @@ public class Oneal extends Enemy {
             for (int i = 0; i < 4; i++) {
                 int newrow = row + Y[i];
                 int newcol = col + X[i];
-                if (newcol < 0 || newrow < 0 || newrow >= BombermanGame.numRows || newcol >= BombermanGame.numColumns)
+                if (newcol < 0 || newrow < 0 || newrow >= GameStage.numRows || newcol >= GameStage.numColumns)
                     continue;
                 if (!Map.isBlock(game.staticEntities[newrow][newcol]) && dis[newrow][newcol] == 10000) {
                     dis[newrow][newcol] = dis[row][col] + 1;

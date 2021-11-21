@@ -2,7 +2,7 @@ package entities.enemy;
 
 import entities.MovingEntity;
 import graphics.Sprite;
-import main.BombermanGame;
+import main.GameStage;
 
 public abstract class Enemy extends MovingEntity {
     int targetX;
@@ -12,10 +12,10 @@ public abstract class Enemy extends MovingEntity {
         super(x, y, movingSprites,deadSprites);
     }
 
-    public abstract void setTarget(BombermanGame game);
+    public abstract void setTarget(GameStage game);
 
     @Override
-    public void move(BombermanGame game) {
+    public void move(GameStage game) {
         if (isDying) {
             dying();
             return;

@@ -15,7 +15,7 @@ public class Brick extends Entity {
     public boolean isDestroyed = false;
     private int explodeSpriteIndex = 0;
     private Item item;
-
+    private Portal portal;
     public Brick(int x, int y, Sprite sprite) {
         super(x, y, sprite);
     }
@@ -26,6 +26,14 @@ public class Brick extends Entity {
 
     public Item getItem() {
         return item;
+    }
+
+    public Portal getPortal() {
+        return portal;
+    }
+
+    public void setPortal(Portal portal) {
+        this.portal = portal;
     }
 
     public void run() {

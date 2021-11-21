@@ -20,7 +20,12 @@ public class Map {
     public static final char BOMB_ITEM = 'b';
     public static final char FLAME_ITEM = 'f';
     public static final char SPEED_ITEM = 's';
+    public static final char PORTAL = 'x';
     public char[][] originMap = new char [13][31];
+    public static final String[] MAP_PATHS = {
+            "map-config\\map1.txt",
+            "map-config\\map2.txt"
+    };
 
     public static Point getPosition(int x, int y) {
         return new Point(y / Sprite.SIZE, x / Sprite.SIZE);
