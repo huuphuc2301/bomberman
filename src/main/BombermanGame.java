@@ -43,10 +43,12 @@ public class BombermanGame {
 
     public void loadSinglePlay() {
         int indexOfStage = 0;
-        GameStage gameStage = new GameStage(indexOfStage);
+        long createTime = System.currentTimeMillis();
+        int timeScoreValue = 0;
+        GameStage gameStage = new GameStage(indexOfStage, createTime, timeScoreValue);
         while (indexOfStage < Map.MAP_PATHS.length) {
             if (indexOfStage > 0) frame.remove(gameStage);
-            gameStage = new GameStage(indexOfStage);
+            gameStage = new GameStage(indexOfStage, gameStage.createTime, gameStage.timeScoreValue);
             gameStage.addListener(gameStage);
             gameStage.setLayout(null);
             frame.add(gameStage);

@@ -52,7 +52,6 @@ public class Menu extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     if (indexOfItem == 0) {
                         isExit = true;
-                        System.out.println(1);
                     }
 
                 }

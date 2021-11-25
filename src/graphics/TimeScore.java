@@ -19,6 +19,14 @@ public class TimeScore {
         x = 922 - count * 14;
     }
 
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
     public void draw(Graphics g) {
         g.setFont(new Font("Calibri", Font.BOLD,30));
         g.setColor(Color.white);

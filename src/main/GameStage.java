@@ -27,16 +27,18 @@ public class GameStage extends JPanel {
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Bomb> bombs = new ArrayList<>();
     public long createTime, pauseTime, unPauseTime;
-    private int timeScoreValue = 0;
+    public int timeScoreValue;
     public boolean isPaused = false;
     private boolean nextIsPaused = true;
     private int indexOfStage;
     private boolean isWin = false;
+    private TimeScore timeScore;
 
-    public GameStage(int indexOfStage) {
+    public GameStage(int indexOfStage, long createTime, int timeScoreValue) {
         this.indexOfStage = indexOfStage;
         this.mapPath = Map.MAP_PATHS[indexOfStage];
-        createTime = System.currentTimeMillis();
+        this.createTime = createTime;
+        this.timeScoreValue = timeScoreValue;
     }
 
 
@@ -167,7 +169,7 @@ public class GameStage extends JPanel {
         bomber.move(this);
         bomber.draw(g);
 
-        TimeScore timeScore = new TimeScore((timeScoreValue + (int) (System.currentTimeMillis() - createTime)) / 1000);
+        timeScore = new TimeScore((timeScoreValue + (int) (System.currentTimeMillis() - createTime)) / 1000);
         timeScore.draw(g);
         if (bomber.inPortal && enemies.size() == 0) {
             isWin = true;
@@ -191,7 +193,6 @@ public class GameStage extends JPanel {
             public void keyTyped(KeyEvent e) {
 
             }
-
             @Override
             public void keyPressed(KeyEvent e) {
                 if (isPaused && e.getKeyCode() != KeyEvent.VK_ESCAPE) return;
@@ -263,14 +264,17 @@ public class GameStage extends JPanel {
 
         long time1 = System.currentTimeMillis();
 
+        timeScore = new TimeScore((timeScoreValue + (int) (System.currentTimeMillis() - createTime)) / 1000);
+        timeScore.draw(g);
+
         g.setFont(new Font("Calibri", Font.BOLD, 50));
         g.setColor(new Color(35, 29, 116));
         g.drawString("STAGE " + (indexOfStage + 1), 400, 200);
         while (System.currentTimeMillis() - time1 < 1000) {
+            isPaused = true;
             this.getGraphics().drawImage(scene, 0, 0, null);
         }
-
-        createTime = System.currentTimeMillis();
+        isPaused = false;
 
         long secondTime = System.currentTimeMillis();
         int count = 0;
@@ -283,7 +287,7 @@ public class GameStage extends JPanel {
                 continue;
             }
             if (System.currentTimeMillis() - secondTime > 1000) {
-                System.out.println(sleepTime + " " + "FPS " + count);
+                System.out.println("FPS " + count);
                 count = 0;
                 secondTime = System.currentTimeMillis();
             }
@@ -311,9 +315,12 @@ public class GameStage extends JPanel {
             return false;
         }
         if (indexOfStage == Map.MAP_PATHS.length - 1) {
-            g.drawImage(Sprite.win.getImage(), 340, 100, null);
+            g.drawImage(Sprite.win.getImage(), 340, 90, null);
+            g.setColor(new Color(35, 29, 116));
+            g.setFont(new Font("Calibri", Font.BOLD, 40));
+            g.drawString("YOUR TIME: " + timeScore.getValue(), 370, 255);
             long time2 = System.currentTimeMillis();
-            while (System.currentTimeMillis() - time2 < 2000) {
+            while (System.currentTimeMillis() - time2 < 3000) {
                 this.getGraphics().drawImage(scene, 0, 0, null);
             }
         }
@@ -328,7 +335,7 @@ public class GameStage extends JPanel {
         mainFrame.setResizable(false);
 
         //Sound.load();
-        GameStage myGame = new GameStage(1);
+        GameStage myGame = new GameStage(1, System.currentTimeMillis(), 0);
         myGame.setFocusable(true);
         myGame.requestFocusInWindow();
         myGame.addListener(myGame);
