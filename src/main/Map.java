@@ -17,11 +17,15 @@ public class Map {
     public static final char BOMBER = 'p';
     public static final char BALLOOM = '1';
     public static final char ONEAL = '2';
+    public static final char MINVO = '3';
+    public static final char KONDORIA = '4';
     public static final char BOMB_ITEM = 'b';
     public static final char FLAME_ITEM = 'f';
     public static final char SPEED_ITEM = 's';
     public static final char PORTAL = 'x';
-    public char[][] originMap = new char [13][31];
+    public int num_rows;
+    public int num_columns;
+    public char[][] originMap = new char [50][100];
     public static final String[] MAP_PATHS = {
             "map-config\\map1.txt",
             "map-config\\map2.txt"
@@ -44,11 +48,19 @@ public class Map {
             System.out.println("Error read file 1");
         }
         String str;
+        try {
+            String[] first_line = buffReader.readLine().split(" ");
+            int stage_index = Integer.parseInt(first_line[0]);
+            num_rows = Integer.parseInt(first_line[1]);
+            num_columns = Integer.parseInt(first_line[2]);
+        } catch(IOException e) {
+            System.out.println("Error read file");
+        }
         int i = 0;
-        while (true) {
+        while (i < num_rows) {
             try {
                 if ((str = buffReader.readLine()) == null) break;
-                for (int j = 0; j < 31; j++) {
+                for (int j = 0; j < num_columns; j++) {
                     originMap[i][j] = str.charAt(j);
                 }
                 i++;

@@ -37,6 +37,10 @@ public class Balloom extends Enemy {
 
     @Override
     public void move(GameStage game) {
+        if (isDying) {
+            super.move(game);
+            return;
+        }
         steps=(steps+1)%4;
         if (steps==0) return;
         super.move(game);

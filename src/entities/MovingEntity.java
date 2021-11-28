@@ -3,6 +3,7 @@ package entities;
 import entities.bomber.Bomb;
 import entities.bomber.Bomber;
 import entities.enemy.Enemy;
+import entities.enemy.Kondoria;
 import graphics.Sprite;
 import main.GameStage;
 import main.Map;
@@ -51,20 +52,17 @@ public abstract class MovingEntity extends Entity {
         }
         if (rightIndex > 2) rightIndex = 0;
         mainSprite = movingSprites[rightIndex];
-
         Point center = getCenter();
         Point pos = Map.getPosition(center.x, center.y);
-        int maxX = 30 * Sprite.SIZE;
-        if (pos.y + 1 < 31) {
+        int maxX = game.numColumns * Sprite.SIZE;
+        if (pos.y + 1 < game.numColumns) {
             int j = pos.y + 1;
-            if (game.staticEntities[pos.x][j] instanceof Bomb) {
+            if (game.staticEntities[pos.x][j] instanceof Wall || !(this instanceof Kondoria) )
+            if (Map.isBlock(game.staticEntities[pos.x][j])) {
                 maxX = j * Sprite.SIZE;
                 if (this instanceof Enemy && x + speed > maxX - getWidth()) {
                     ((Enemy) this).setTarget(game);
                 }
-            }
-            if (Map.isBlock(game.staticEntities[pos.x][j])) {
-                maxX = j * Sprite.SIZE;
             }
         }
         setX(Math.min(maxX - getWidth(), x + speed));
@@ -84,14 +82,12 @@ public abstract class MovingEntity extends Entity {
         int minX = Sprite.SIZE;
         if (pos.y - 1 >= 0) {
             int j = pos.y - 1;
-            if (game.staticEntities[pos.x][j] instanceof Bomb) {
+            if (game.staticEntities[pos.x][j] instanceof Wall || !(this instanceof Kondoria) )
+            if (Map.isBlock(game.staticEntities[pos.x][j])) {
                 minX = (j + 1) * Sprite.SIZE;
                 if (this instanceof Enemy && x - speed < minX) {
                     ((Enemy) this).setTarget(game);
                 }
-            }
-            if (Map.isBlock(game.staticEntities[pos.x][j])) {
-                minX = (j + 1) * Sprite.SIZE;
             }
         }
         setX(Math.max(minX, x - speed));
@@ -111,14 +107,12 @@ public abstract class MovingEntity extends Entity {
         int minY = Sprite.SIZE;
         if (pos.x - 1 >= 0) {
             int i = pos.x - 1;
-            if (game.staticEntities[i][pos.y] instanceof Bomb) {
+            if (game.staticEntities[i][pos.y] instanceof Wall || !(this instanceof Kondoria) )
+            if (Map.isBlock(game.staticEntities[i][pos.y])) {
                 minY = (i + 1) * Sprite.SIZE;
                 if (this instanceof Enemy && y - speed < minY) {
                     ((Enemy) this).setTarget(game);
                 }
-            }
-            if (Map.isBlock(game.staticEntities[i][pos.y])) {
-                minY = (i + 1) * Sprite.SIZE;
             }
         }
         this.setY(Math.max(minY, y - speed));
@@ -135,17 +129,15 @@ public abstract class MovingEntity extends Entity {
 
         Point center = getCenter();
         Point pos = Map.getPosition(center.x, center.y);
-        int maxY = 13 * Sprite.SIZE;
-        if (pos.x + 1 < 13) {
+        int maxY = game.numRows * Sprite.SIZE;
+        if (pos.x + 1 < game.numRows) {
             int i = pos.x + 1;
-            if (game.staticEntities[i][pos.y] instanceof Bomb) {
+            if (game.staticEntities[i][pos.y] instanceof Wall || !(this instanceof Kondoria) )
+            if (Map.isBlock(game.staticEntities[i][pos.y])) {
                 maxY = i * Sprite.SIZE;
                 if (this instanceof Enemy && y + speed > maxY - getHeight()) {
                     ((Enemy) this).setTarget(game);
                 }
-            }
-            if (Map.isBlock(game.staticEntities[i][pos.y])) {
-                maxY = i * Sprite.SIZE;
             }
         }
         this.setY(Math.min(maxY - getHeight(), y + speed));

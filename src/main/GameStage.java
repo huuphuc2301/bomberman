@@ -3,9 +3,7 @@ package main;
 import entities.*;
 import entities.bomber.Bomb;
 import entities.bomber.Bomber;
-import entities.enemy.Balloom;
-import entities.enemy.Enemy;
-import entities.enemy.Oneal;
+import entities.enemy.*;
 import entities.item.*;
 import graphics.Sprite;
 import graphics.TimeScore;
@@ -18,11 +16,12 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class GameStage extends JPanel {
-    public static final int numColumns = 31;
-    public static final int numRows = 13;
-    public Entity[][] staticEntities = new Entity[13][31];
+    public int numColumns;
+    public int numRows;
+    public Entity[][] staticEntities = new Entity[50][100];
     public Bomber bomber = new Bomber(Sprite.SIZE, Sprite.SIZE);
-    BufferedImage scene = new BufferedImage(BombermanGame.WIDTH, BombermanGame.HEIGHT, BufferedImage.TYPE_INT_RGB);
+    BufferedImage mainScene = new BufferedImage(BombermanGame.WIDTH, BombermanGame.HEIGHT, BufferedImage.TYPE_INT_RGB);
+    BufferedImage gameScene;
     public String mapPath;
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Bomb> bombs = new ArrayList<>();
@@ -43,9 +42,12 @@ public class GameStage extends JPanel {
 
 
     void loadMap(String path) {
-        char[][] originMap = new Map(path).originMap;
-        for (int i = 0; i < 13; i++) {
-            for (int j = 0; j < 31; j++) {
+        Map map = new Map(path);
+        char[][] originMap = map.originMap;
+        numColumns = map.num_columns;
+        numRows = map.num_rows;
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numColumns; j++) {
                 switch (originMap[i][j]) {
                     case Map.WALL: {
                         staticEntities[i][j] = new Wall(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.wall);
@@ -89,6 +91,16 @@ public class GameStage extends JPanel {
                         staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
                         break;
                     }
+                    case Map.MINVO: {
+                        enemies.add(new Minvo(j * Sprite.SIZE, i * Sprite.SIZE));
+                        staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
+                        break;
+                    }
+                    case Map.KONDORIA: {
+                        enemies.add(new Kondoria(j * Sprite.SIZE, i * Sprite.SIZE));
+                        staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
+                        break;
+                    }
                     default:
                         staticEntities[i][j] = new Grass(j * Sprite.SIZE, i * Sprite.SIZE, Sprite.grass);
                 }
@@ -98,9 +110,9 @@ public class GameStage extends JPanel {
     }
 
     public void runAndDraw() {
-        Graphics g = scene.getGraphics();
-        for (int i = 0; i < 13; i++) {
-            for (int j = 0; j < 31; j++) {
+        Graphics g = gameScene.getGraphics();
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numColumns; j++) {
                 if (staticEntities[i][j] instanceof Brick && ((Brick) staticEntities[i][j]).isDestroyed) {
 
                     if (((Brick) staticEntities[i][j]).getItem() != null) {
@@ -156,8 +168,9 @@ public class GameStage extends JPanel {
 
         bombs.removeIf(bomb -> !bomb.isRunning);
         for (Bomb bomb : bombs) {
-            bomb.run(this);
             bomb.draw(g);
+            bomb.run(this);
+
         }
 
         enemies.removeIf(enemy -> enemy.isDead);
@@ -168,12 +181,11 @@ public class GameStage extends JPanel {
         bomber.inPortal = false;
         bomber.move(this);
         bomber.draw(g);
-
-        timeScore = new TimeScore((timeScoreValue + (int) (System.currentTimeMillis() - createTime)) / 1000);
-        timeScore.draw(g);
         if (bomber.inPortal && enemies.size() == 0) {
             isWin = true;
         }
+        Point pos = getGameScenePosition();
+        mainScene.getGraphics().drawImage(gameScene,pos.x,pos.y,null);
     }
 
     public void pauseOrUnpause() {
@@ -253,26 +265,36 @@ public class GameStage extends JPanel {
         for (Enemy enemy : enemies) enemy.setTarget(this);
     }
 
+    public Point getGameScenePosition() {
+        int x = this.bomber.getX();
+        int y = this.bomber.getY();
+        x -= 15 * Sprite.SIZE;
+        y -= 6 * Sprite.SIZE;
+        x = Math.max(x,0);
+        y = Math.max(y,0);
+        x = Math.min(x, (numColumns-31) * Sprite.SIZE);
+        y = Math.min(y, (numRows-13) * Sprite.SIZE);
+        return new Point(-x,-y);
+    }
+
     public boolean start() {
-        Graphics g = scene.getGraphics();
+        Graphics g = mainScene.getGraphics();
         loadMap(mapPath);
-
+        gameScene = new BufferedImage(numColumns * Sprite.SIZE,  numRows * Sprite.SIZE, BufferedImage.TYPE_INT_RGB);
         setTargetEnemies();
-
         runAndDraw();
         g.drawImage(Sprite.bottomOfStage.getImage(), 0, 416, null);
-
-        long time1 = System.currentTimeMillis();
-
         timeScore = new TimeScore((timeScoreValue + (int) (System.currentTimeMillis() - createTime)) / 1000);
         timeScore.draw(g);
 
+
+        long time1 = System.currentTimeMillis();
         g.setFont(new Font("Calibri", Font.BOLD, 50));
         g.setColor(new Color(35, 29, 116));
         g.drawString("STAGE " + (indexOfStage + 1), 400, 200);
         while (System.currentTimeMillis() - time1 < 1000) {
             isPaused = true;
-            this.getGraphics().drawImage(scene, 0, 0, null);
+            this.getGraphics().drawImage(mainScene, 0, 0, null);
         }
         isPaused = false;
 
@@ -283,7 +305,7 @@ public class GameStage extends JPanel {
         while (!isWin && !bomber.isDead) {
             if (this.isPaused) {
                 g.drawImage(Sprite.pause.getImage(), 345, 100, null);
-                this.getGraphics().drawImage(scene, 0, 0, null);
+                this.getGraphics().drawImage(gameScene, 0, 0, null);
                 continue;
             }
             if (System.currentTimeMillis() - secondTime > 1000) {
@@ -295,10 +317,12 @@ public class GameStage extends JPanel {
             else if (System.currentTimeMillis() - startTime < 13) sleepTime++;
             startTime = System.currentTimeMillis();
             count++;
+            runAndDraw();
 
             g.drawImage(Sprite.bottomOfStage.getImage(), 0, 416, null);
-            runAndDraw();
-            this.getGraphics().drawImage(scene, 0, 0, null);
+            timeScore = new TimeScore((timeScoreValue + (int) (System.currentTimeMillis() - createTime)) / 1000);
+            timeScore.draw(g);
+            this.getGraphics().drawImage(mainScene, 0, 0, null);
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
@@ -310,7 +334,7 @@ public class GameStage extends JPanel {
             g.drawImage(Sprite.lose.getImage(), 340, 100, null);
             long time2 = System.currentTimeMillis();
             while (System.currentTimeMillis() - time2 < 2000) {
-                this.getGraphics().drawImage(scene, 0, 0, null);
+                this.getGraphics().drawImage(mainScene, 0, 0, null);
             }
             return false;
         }
@@ -321,7 +345,7 @@ public class GameStage extends JPanel {
             g.drawString("YOUR TIME: " + timeScore.getValue(), 370, 255);
             long time2 = System.currentTimeMillis();
             while (System.currentTimeMillis() - time2 < 3000) {
-                this.getGraphics().drawImage(scene, 0, 0, null);
+                this.getGraphics().drawImage(mainScene, 0, 0, null);
             }
         }
         return true;
@@ -334,8 +358,7 @@ public class GameStage extends JPanel {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
 
-        //Sound.load();
-        GameStage myGame = new GameStage(1, System.currentTimeMillis(), 0);
+        GameStage myGame = new GameStage(0, System.currentTimeMillis(), 0);
         myGame.setFocusable(true);
         myGame.requestFocusInWindow();
         myGame.addListener(myGame);

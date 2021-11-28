@@ -1,5 +1,7 @@
 package entities.enemy;
 
+import entities.Wall;
+import entities.bomber.Bomb;
 import graphics.Sprite;
 import main.GameStage;
 import main.Map;
@@ -7,54 +9,39 @@ import main.Map;
 import java.awt.*;
 import java.util.*;
 
-public class Oneal extends Enemy {
+public class Kondoria extends Enemy {
     private int steps = 0;
-    private boolean isFastMode = true;
     private static final Sprite[] movingSprites = {
-            Sprite.oneal_right1,
-            Sprite.oneal_right2,
-            Sprite.oneal_right3,
-            Sprite.oneal_left1,
-            Sprite.oneal_left2,
-            Sprite.oneal_left3,
-            Sprite.oneal_right1,
-            Sprite.oneal_right2,
-            Sprite.oneal_right3,
-            Sprite.oneal_left1,
-            Sprite.oneal_left2,
-            Sprite.oneal_left3,
+            Sprite.kondoria_right1,
+            Sprite.kondoria_right2,
+            Sprite.kondoria_right3,
+            Sprite.kondoria_left1,
+            Sprite.kondoria_left2,
+            Sprite.kondoria_left3,
+            Sprite.kondoria_right1,
+            Sprite.kondoria_right2,
+            Sprite.kondoria_right3,
+            Sprite.kondoria_left1,
+            Sprite.kondoria_left2,
+            Sprite.kondoria_left3,
     };
     private static final Sprite[] deadSprites = {
-            Sprite.oneal_dead,
+            Sprite.kondoria_dead,
             Sprite.mob_dead1,
             Sprite.mob_dead2,
             Sprite.mob_dead3,
     };
-    public Oneal(int x, int y) {
+    public Kondoria(int x, int y) {
         super(x, y, movingSprites,deadSprites);
-
         setSpeed(1);
     }
 
+
     @Override
     public void move(GameStage game) {
-        if (isDying) {
-            super.move(game);
-            return;
-        }
-        steps++;
-        if (steps > new Random().nextInt(10000) + 100) {
-            isFastMode = !isFastMode;
-            steps = 0;
-        }
-        if (isFastMode) {
-            super.move(game);
-            return;
-        }
-
-        if (steps % 2 == 0) return;
+        steps=(steps+1)%2;
+        if (steps==0) return;
         super.move(game);
-
     }
 
     @Override
@@ -82,50 +69,52 @@ public class Oneal extends Enemy {
                 int newcol = col + X[i];
                 if (newcol < 0 || newrow < 0 || newrow >= game.numRows || newcol >= game.numColumns)
                     continue;
-                if (!Map.isBlock(game.staticEntities[newrow][newcol]) && dis[newrow][newcol] == 10000) {
+                if (game.staticEntities[newrow][newcol] instanceof Bomb) continue;
+                if (!(game.staticEntities[row][col] instanceof Wall) && dis[newrow][newcol] == 10000) {
                     dis[newrow][newcol] = dis[row][col] + 1;
                     queue.add(new Point(newrow, newcol));
                 }
-                //System.out.println(String.valueOf(newrow)+" "+String.valueOf(newcol)+" "+String.valueOf(dis[newrow][newcol]));
             }
         }
+
         int row = enemyRow;
         int col = enemyCol;
         ArrayList<Point> points = new ArrayList<>();
-        while (++col <= game.getWidth() / Sprite.SIZE) {
-            if (!Map.isBlock(game.staticEntities[row][col])) {
+        if (++col <= game.getWidth() / Sprite.SIZE) {
+            if (!(game.staticEntities[row][col] instanceof Wall)) {
                 points.add(new Point(col, row));
-            } else break;
+            }
         }
-        col = x / Sprite.SIZE;
-        while (--col >= 0) {
-            if (!Map.isBlock(game.staticEntities[row][col])) {
+        col = enemyCol;
+        if (--col >= 0) {
+            if (!(game.staticEntities[row][col] instanceof Wall)) {
                 points.add(new Point(col, row));
-            } else break;
+            }
         }
-        col = x / Sprite.SIZE;
-        while (++row < game.getHeight() / Sprite.SIZE) {
-            if (!Map.isBlock(game.staticEntities[row][col])) {
+        col = enemyCol;
+        if (++row < game.getHeight() / Sprite.SIZE) {
+            if (!(game.staticEntities[row][col] instanceof Wall)) {
                 points.add(new Point(col, row));
-            } else break;
+            }
         }
-        row = y / Sprite.SIZE;
-        while (--row >= 0) {
-            if (!Map.isBlock(game.staticEntities[row][col])) {
+        row = enemyRow;
+        if (--row >= 0) {
+            if (!(game.staticEntities[row][col] instanceof Wall)) {
                 points.add(new Point(col, row));
-            } else break;
+            }
         }
-        row = y / Sprite.SIZE;
+        row = enemyRow;
+
         ArrayList<Point> targets = new ArrayList<>();
         int minDis = 10001;
         for (Point point : points) {
             int newcol = point.x;
             int newrow = point.y;
-            if (!Map.isBlock(game.staticEntities[newrow][newcol]) && minDis > dis[newrow][newcol]) {
+            if (!(game.staticEntities[newrow][newcol] instanceof Wall) && minDis > dis[newrow][newcol]) {
                 minDis = dis[newrow][newcol];
                 targets.clear();
             }
-            if (!Map.isBlock(game.staticEntities[newrow][newcol]) && minDis == dis[newrow][newcol]) {
+            if (!(game.staticEntities[newrow][newcol] instanceof Wall)  && minDis == dis[newrow][newcol]) {
                 targets.add(new Point(newcol, newrow));
             }
 
@@ -134,7 +123,6 @@ public class Oneal extends Enemy {
         Collections.shuffle(targets);
         targetX = targets.get(0).x * Sprite.SIZE;
         targetY = targets.get(0).y * Sprite.SIZE;
-        //System.out.println(String.valueOf(minDis)+" "+String.valueOf(targetY/Sprite.SIZE)+" "+String.valueOf(targetX/Sprite.SIZE));
-        //System.out.println(targets.size()+" "+targets.get(0).x +" "+targets.get(0).y);
+        System.out.println(targets.get(0).x+" "+targets.get(0).y );
     }
 }
