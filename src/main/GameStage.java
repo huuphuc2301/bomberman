@@ -33,8 +33,17 @@ public class GameStage extends JPanel {
     private boolean isWin = false;
     private TimeScore timeScore;
 
-    public GameStage(int indexOfStage, long createTime, int timeScoreValue) {
+    public GameStage(int indexOfStage,long createTime, int timeScoreValue) {
         this.indexOfStage = indexOfStage;
+        this.mapPath = Map.MAP_PATHS[indexOfStage];
+        this.createTime = createTime;
+        this.timeScoreValue = timeScoreValue;
+    }
+    public GameStage(int indexOfStage,Bomber bomber, long createTime, int timeScoreValue) {
+        this.indexOfStage = indexOfStage;
+        this.bomber = bomber;
+        this.bomber.setX(Sprite.SIZE);
+        this.bomber.setY(Sprite.SIZE);
         this.mapPath = Map.MAP_PATHS[indexOfStage];
         this.createTime = createTime;
         this.timeScoreValue = timeScoreValue;
@@ -305,7 +314,7 @@ public class GameStage extends JPanel {
         while (!isWin && !bomber.isDead) {
             if (this.isPaused) {
                 g.drawImage(Sprite.pause.getImage(), 345, 100, null);
-                this.getGraphics().drawImage(gameScene, 0, 0, null);
+                this.getGraphics().drawImage(mainScene, 0, 0, null);
                 continue;
             }
             if (System.currentTimeMillis() - secondTime > 1000) {
