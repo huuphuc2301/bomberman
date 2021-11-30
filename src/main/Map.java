@@ -28,7 +28,8 @@ public class Map {
     public char[][] originMap = new char [50][100];
     public static final String[] MAP_PATHS = {
             "map-config\\map1.txt",
-            "map-config\\map2.txt"
+            "map-config\\map2.txt",
+            "map-config\\map3.txt"
     };
 
     public static Point getPosition(int x, int y) {

@@ -16,7 +16,7 @@ public class TimeScore {
             temp /= 10;
         }
         count = Math.max(count, 1);
-        x = 922 - count * 14;
+        x = 944 - count * 14;
     }
 
     public int getValue() {

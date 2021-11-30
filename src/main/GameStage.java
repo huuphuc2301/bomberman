@@ -5,6 +5,7 @@ import entities.bomber.Bomb;
 import entities.bomber.Bomber;
 import entities.enemy.*;
 import entities.item.*;
+import graphics.PowerupInfo;
 import graphics.Sprite;
 import graphics.TimeScore;
 
@@ -295,7 +296,8 @@ public class GameStage extends JPanel {
         g.drawImage(Sprite.bottomOfStage.getImage(), 0, 416, null);
         timeScore = new TimeScore((timeScoreValue + (int) (System.currentTimeMillis() - createTime)) / 1000);
         timeScore.draw(g);
-
+        new PowerupInfo(bomber.getMaxBomb() - 1,
+                bomber.getBombSize() - 1, bomber.getSpeed() - 1).draw(g);
 
         long time1 = System.currentTimeMillis();
         g.setFont(new Font("Calibri", Font.BOLD, 50));
@@ -331,6 +333,8 @@ public class GameStage extends JPanel {
             g.drawImage(Sprite.bottomOfStage.getImage(), 0, 416, null);
             timeScore = new TimeScore((timeScoreValue + (int) (System.currentTimeMillis() - createTime)) / 1000);
             timeScore.draw(g);
+            new PowerupInfo(bomber.getMaxBomb() - 1,
+                    bomber.getBombSize() - 1, bomber.getSpeed() - 1).draw(g);
             this.getGraphics().drawImage(mainScene, 0, 0, null);
             try {
                 Thread.sleep(sleepTime);
