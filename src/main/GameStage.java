@@ -8,7 +8,9 @@ import entities.item.*;
 import graphics.PowerupInfo;
 import graphics.Sprite;
 import graphics.TimeScore;
+import sounds.Sound;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -29,10 +31,10 @@ public class GameStage extends JPanel {
     public long createTime, pauseTime, unPauseTime;
     public int timeScoreValue;
     public boolean isPaused = false;
-    private boolean nextIsPaused = true;
-    private int indexOfStage;
-    private boolean isWin = false;
-    private TimeScore timeScore;
+    protected boolean nextIsPaused = true;
+    protected int indexOfStage;
+    protected boolean isWin = false;
+    protected TimeScore timeScore;
 
     public GameStage(int indexOfStage,long createTime, int timeScoreValue) {
         this.indexOfStage = indexOfStage;
@@ -361,6 +363,8 @@ public class GameStage extends JPanel {
                 this.getGraphics().drawImage(mainScene, 0, 0, null);
             }
         }
+        Clip completeSound = Sound.getClip("sounds/complete_stage.wav");
+        completeSound.start();
         return true;
     }
 

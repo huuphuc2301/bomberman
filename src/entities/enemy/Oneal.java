@@ -65,9 +65,9 @@ public class Oneal extends Enemy {
         int bomberRow = game.bomber.getY() / Sprite.SIZE;
         int[] X = {0, 0, 1, -1};
         int[] Y = {1, -1, 0, 0};
-        int[][] dis = new int[game.getHeight()][game.getWidth()];
-        for (int i = 0; i < game.getHeight(); i++)
-            for (int j = 0; j < game.getWidth(); j++)
+        int[][] dis = new int[game.numRows][game.numColumns];
+        for (int i = 0; i < game.numRows; i++)
+            for (int j = 0; j < game.numColumns; j++)
                 dis[i][j] = 10000;
 
         Queue<Point> queue = new LinkedList<>();

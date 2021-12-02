@@ -48,10 +48,11 @@ public class Balloom extends Enemy {
 
     @Override
     public void setTarget(GameStage game) {
+
         int col = x/Sprite.SIZE;
         int row = y/Sprite.SIZE;
         ArrayList<Point> targets = new ArrayList<>();
-        while (++col <= game.getWidth() / Sprite.SIZE) {
+        while (++col < game.numColumns) {
             if (!Map.isBlock(game.staticEntities[row][col])) {
                 targets.add(new Point(col, row));
             } else break;
@@ -63,7 +64,7 @@ public class Balloom extends Enemy {
             } else break;
         }
         col = x/Sprite.SIZE;
-        while (++row < game.getHeight() / Sprite.SIZE) {
+        while (++row < game.numRows) {
             if (!Map.isBlock(game.staticEntities[row][col])) {
                 targets.add(new Point(col, row));
             } else break;
